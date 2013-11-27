@@ -222,7 +222,7 @@ class AnalyserWindow : public Gtk::Window {
     void lifetimeErrorEdited (const Glib::ustring& path_string, const Glib::ustring& new_text);
     
     // Error Handlers
-    void display_error (Error Err, string StatusMsg = "");
+    void display_error (Error *Err, string StatusMsg = "");
     
   protected:
     // GTK signal handlers

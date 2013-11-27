@@ -741,10 +741,10 @@ void OutputWindow::on_button_save () {
           "Use the drop down box on the left of the window"));
     }
     hide ();
-  } catch (Error Err) {
-    if (Err.code != FLT_SAVE_ABORTED) {
-      Gtk::MessageDialog dialog(*this, Err.message, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
-      dialog.set_secondary_text(Err.subtext);
+  } catch (Error *Err) {
+    if (Err->code != FLT_SAVE_ABORTED) {
+      Gtk::MessageDialog dialog(*this, Err->message, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+      dialog.set_secondary_text(Err->subtext);
       dialog.run();
     }
   }

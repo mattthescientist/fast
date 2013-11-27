@@ -21,6 +21,9 @@
 // displayed in the AnalyserWindow. They are called whenever any data is loaded
 // or deleted, or when the user requests different data be shown.
 
+#include "TypeDefs.h"
+using namespace::std;
+
 //------------------------------------------------------------------------------
 // updateKuruczCompleteness () : Whenever any of the Kurucz line list parameters
 // change, updateKuruczCompleteness is called to recalculate the fraction of
@@ -222,8 +225,8 @@ void AnalyserWindow::updateXGremlinList (
                 BestScalingFactor.b = 0;
                 BestScalingFactor.Ratio = 1.0;
                 BestScalingFactor.Error = 0.0;
-                cout << "Unable to link " << SpectrumLabels [j] << " and " 
-                  << SpectrumLabels [0] << endl;
+//                cout << "Unable to link " << SpectrumLabels [j] << " and "
+//                  << SpectrumLabels [0] << endl;
               }
             }
           }

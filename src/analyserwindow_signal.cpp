@@ -20,7 +20,9 @@
 // This file contains general signal handlers that do not belong in any of the
 // other analyserwindow_signal_*.cpp files.
 
-#define ASCII_A 65
+#ifndef ASCII_A
+  #define ASCII_A 65
+#endif
 
 //------------------------------------------------------------------------------
 // ref_spectrum_toggled (const Glib::ustring&) : Handles signal toggled events
@@ -96,7 +98,7 @@ void AnalyserWindow::newProject () {
         } else {
           saveProject (CurrentFilename);
         }
-      } catch (Error e) {
+      } catch (Error *e) {
         // Do nothing else here
         return;
       }

@@ -33,6 +33,7 @@ XgLine::XgLine () {
   Dmp = 0.0; EqWidth = 0.0; EpsTot = 0.0; EpsEvn = 0.0; EpsOdd = 0.0; 
   EpsRan = 0.0; Wavelength = 0.0; Tags = ""; Identification = "";
   WavenumberCorrection = 0.0; AirCorrection = 0.0; IntensityCalibration = 0.0;
+  Spare = 0.0;
   SNR = 0.0;
   Noise = 1.0;
   SourceFilename = "";

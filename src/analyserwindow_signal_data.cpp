@@ -19,6 +19,14 @@
 //==============================================================================
 // This file contains the signal handlers for the "Data" menu.
 
+#include "TypeDefs.h"
+
+#ifndef ASCII_A
+  #define ASCII_A 65
+#endif
+
+using namespace::std;
+
 //------------------------------------------------------------------------------
 // loadXGremlinData () : Manages the duel loading of an XGremlin spectrum and
 // line list. If the user cancels the loading of a spectrum, no prompt is given
@@ -27,7 +35,7 @@
 void AnalyserWindow::loadXGremlinData () {
   try {
     do_load_expt_spectrum ();
-  } catch (Error e) {
+  } catch (Error *e) {
     // A problem was encountered. Return without prompting for a line list.
     return;
   }
@@ -76,7 +84,7 @@ void AnalyserWindow::on_data_load_kurucz () {
         oss << "Successfully loaded " << dialog.get_filename().substr(FilePos) << ".";
         Status.push (oss.str());
         projectHasChanged (true);
-      } catch (Error Err) {
+      } catch (Error *Err) {
         display_error (Err);
         return;
       }
@@ -120,7 +128,7 @@ void AnalyserWindow::on_data_save_kurucz () {
     { 
       try {
         KuruczList.save (dialog.get_filename());
-      } catch (Error Err) {
+      } catch (Error *Err) {
         display_error (Err);
         return;
       }
@@ -145,8 +153,8 @@ void AnalyserWindow::on_data_save_kurucz () {
 //
 void AnalyserWindow::on_data_load_expt_spectrum () { 
   try {
-    on_data_load_expt_spectrum ();
-  } catch (Error Err) {
+    do_load_expt_spectrum ();
+  } catch (Error *Err) {
     // Do nothing. The error has been handled elsewhere. This function is just
     // a wrapper to complement AnalyserWindow::loadXGremlinData (), above.
   }
@@ -157,8 +165,8 @@ void AnalyserWindow::on_data_load_expt_spectrum () {
 // do_load_expt_spectrum () : Loads a user specified XGremlin spectrum
 //
 void AnalyserWindow::do_load_expt_spectrum () throw (Error) { 
-  Gtk::FileChooserDialog dialog("Select an expeimental data file to load",
-    Gtk::FILE_CHOOSER_ACTION_OPEN);
+  Gtk::FileChooserDialog dialog("Select an experimental data file to load",
+		  Gtk::FILE_CHOOSER_ACTION_OPEN);
   dialog.set_transient_for(*this);
 
   // Add response buttons the the dialog
@@ -233,7 +241,7 @@ void AnalyserWindow::do_load_expt_spectrum () throw (Error) {
         
       // If a file reading error occurs, inform the user. If another error has
       // occurred, continue to throw it.
-      } catch (Error Err) {
+      } catch (Error *Err) {
         display_error (Err);
         throw Error (FLT_DIALOG_CANCEL);
       }          
@@ -349,7 +357,7 @@ void AnalyserWindow::on_data_load_line_list () {
             Status.push (oss.str());
             projectHasChanged (true);
 
-          } catch (Error Err) {
+          } catch (Error *Err) {
             display_error (Err);
             return;
           }
@@ -426,12 +434,12 @@ void AnalyserWindow::on_data_attach_standard_lamp_radiance () {
           // Attach the radiance file to the currently selected spectrum.
           try {
             ExptSpectra[SelectedRow[m_Columns.index]].radiance (dialog.get_filename());
-          } catch (Error Err) {
-            if (Err.code == XGSPEC_NO_RAD_UNCERTAINTIES) {
+          } catch (Error *Err) {
+            if (Err->code == XGSPEC_NO_RAD_UNCERTAINTIES) {
               // Warn the user that no radiance uncertainties were found
-              Gtk::MessageDialog Warning(*this, Err.message,
+              Gtk::MessageDialog Warning(*this, Err->message,
                 false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK);
-              Warning.set_secondary_text(Err.subtext);
+              Warning.set_secondary_text(Err->subtext);
               Warning.run();
             } else {
               // A more serious error occurred, so abort
@@ -494,7 +502,7 @@ void AnalyserWindow::on_data_attach_standard_lamp_spectrum () {
       Gtk::TreeModel::Row SelectedRow = *(iter);
     
       // A selected experimental spectrum exists in treeSpectra. Check to see if
-      // a response functin is already attached to it. If so, pop-up a question
+      // a response function is already attached to it. If so, pop-up a question
       //  dialog to confirm the user wants replace it.
       if (ExptSpectra[SelectedRow[m_Columns.index]].standard_lamp_spectrum ().size () > 0) {
         Gtk::MessageDialog replace(*this, "Attaching a new standard lamp spectrum will replace the existing one. Is this OK?",
@@ -558,7 +566,7 @@ void AnalyserWindow::on_data_attach_standard_lamp_spectrum () {
             updateKuruczCompleteness ();
             updatePlottedData ();
             
-          } catch (Error Err) {
+          } catch (Error *Err) {
             display_error (Err);
             return;
           }

@@ -286,6 +286,8 @@ VoigtLsqfit::VoigtLsqfit () {
   xpara = 0.0;
   xparb = 0.0;
   xparc = 0.0;
+  c = ca = cb = cc = cd = ce = ulim = lastv = xlast = 0.0;
+  ni = nf = na = nb = nop = 0;
 }
 
 

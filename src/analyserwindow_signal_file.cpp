@@ -24,6 +24,10 @@
 // function must read out data using the exact format in which it was saved. If
 // it doesn't, serious errors (seg faults etc.) WILL occur!
 
+#include "TypeDefs.h"
+
+using namespace::std;
+
 //------------------------------------------------------------------------------
 // on_file_new () : Removes all loaded spectra and line lists and so creates a
 // new project for the user.
@@ -78,6 +82,7 @@ void AnalyserWindow::on_file_open () {
       
         updatePlottedData();
       }*/
+      break;
     }
   }
 }
@@ -236,7 +241,7 @@ void AnalyserWindow::on_file_save () {
   } else {
     try {
       saveProject (CurrentFilename);
-    } catch (Error e) {
+    } catch (Error *e) {
       // Error message already displayed. Do nothing.
     }
   }
@@ -297,9 +302,10 @@ void AnalyserWindow::on_file_save_as () {
       }
       try {
         saveProject (Filename);
-      } catch (Error e) {
+      } catch (Error *e) {
         // Error message already displayed. Do nothing.
       }
+      break;
     }
   }
 }
@@ -482,6 +488,7 @@ void AnalyserWindow::on_file_export_project () {
       oss.str ("");
       oss << "Project exported to " << Filename;
       Status.push (oss.str ());
+      break;
     }
   }
 }

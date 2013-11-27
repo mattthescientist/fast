@@ -68,7 +68,7 @@ bool AnalyserWindow::on_delete_event (GdkEventAny* event) {
           saveProject (CurrentFilename);
         }
         this -> hide ();
-      } catch (Error e) {
+      } catch (Error *e) {
         // Do nothing. However, reaching this line will result in the quit being
         // aborted due to a file save error.
       }
