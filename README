@@ -1,0 +1,49 @@
+================================================================================
+The FTS Atomic Spectrum Tool (FAST) - version 0.6
+Source code archive
+================================================================================
+
+The FTS Atomic Spectrum Tool (FAST) is an interactive graphical program designed
+to work in conjunction with the XGremlin package to simplify the analysis of
+atomic line spectra obtained from Fourier transform spectrometers. Calculated
+line parameters (e.g. from the Kurucz database) are loaded alongside their
+observed line profiles for easy comparison between theory and experiment. Many
+such profiles, which could span numerous spectra, may be viewed simultaneously
+to help the user detect problems from line blending or self-absorption. Once the
+user has determined that the XGremlin line profile fits are good, a key feature
+of FAST is the ability to determine atomic branching fractions, transition
+probabilities, and oscillator strengths, which is not provided by existing
+analysis packages.
+
+For instrunctions on compiling and installing FAST, please see the FAST manual, 
+which is included in this archive (docs/fast.pdf).
+
+FAST is released under the GNU General Public License version 3. Please reading 
+COPYING for details.
+
+For more information on FAST, and to download the latest version, please visit:
+http://www.sp.ph.ic.ac.uk/~mruffoni/fast
+
+The following files are contained in this source archive:
+
+Root directory:
+---------------------
+README        - This file
+COPYING       - A copy of the GNU GPL v3 licence
+INSTALL       - Generic installation instructions (just use './configure; make')
+configure     - configure script. Run this to generate a GNU make 'Makefile'
+configure.ac  - Template for the configure script
+install-sh    - Required by the configure script
+Makefile.in   - Template for the GNU make 'Makefile'
+
+'docs' sub-directory:
+---------------------
+fast.1.gz     - Linux man page entry for FAST
+fast.pdf      - PDF version of the FAST manual
+
+'src' sub-directory:
+---------------------
+*.h           - C++ headers. File descriptions are at the top of each file
+*.cpp         - C++ source code. File descriptions are at the top of each file
+*.xpm         - Toolbar icon files
+

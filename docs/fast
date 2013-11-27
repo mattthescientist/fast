@@ -1,0 +1,11 @@
+Document: fast
+Title: FAST User's Manual and Example
+Author: M. Ruffoni
+Abstract: This manual describes FAST, the FTS Atomic Spectrum Tool.
+Section: Science
+
+Format: PDF
+Files: /usr/share/doc/fast/fast.pdf.gz
+
+Format: text
+Files: /usr/share/doc/fast/example/*

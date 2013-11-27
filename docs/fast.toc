@@ -1,0 +1,32 @@
+\contentsline {chapter}{\numberline {1}An Important Disclaimer}{3}
+\contentsline {section}{\numberline {1.1}\emph {FAST} development is ongoing}{3}
+\contentsline {section}{\numberline {1.2}Bug reporting}{3}
+\contentsline {chapter}{\numberline {2}Installing \emph {FAST} }{5}
+\contentsline {section}{\numberline {2.1}Installing pre-compiled binaries}{5}
+\contentsline {section}{\numberline {2.2}Installing from the raw source code}{5}
+\contentsline {chapter}{\numberline {3}Using \emph {FAST} }{6}
+\contentsline {section}{\numberline {3.1}Pre-requisites}{6}
+\contentsline {section}{\numberline {3.2}A first look at the interface}{7}
+\contentsline {section}{\numberline {3.3}Examining FT atomic line spectra}{7}
+\contentsline {subsection}{\numberline {3.3.1}Specifying which spectral lines to analyse}{7}
+\contentsline {subsection}{\numberline {3.3.2}Adding experimental data}{10}
+\contentsline {subsection}{\numberline {3.3.3}Attaching additional line lists}{11}
+\contentsline {subsection}{\numberline {3.3.4}Attaching standard lamp spectra}{11}
+\contentsline {subsection}{\numberline {3.3.5}Attaching standard lamp radiance data}{11}
+\contentsline {subsection}{\numberline {3.3.6}Linking spectra taken simultaneously on different FTS channels}{11}
+\contentsline {section}{\numberline {3.4}Working with the loaded data}{12}
+\contentsline {subsection}{\numberline {3.4.1}Viewing target line lists}{12}
+\contentsline {subsection}{\numberline {3.4.2}Manipulating loaded experimental data}{13}
+\contentsline {subsection}{\numberline {3.4.3}Viewing fit profiles and line properties}{14}
+\contentsline {section}{\numberline {3.5}Saving and loading \emph {FAST} projects}{14}
+\contentsline {section}{\numberline {3.6}Exporting data sets to disk}{15}
+\contentsline {chapter}{\numberline {4}Advanced Analysis Features}{16}
+\contentsline {section}{\numberline {4.1}Spectrum intensity calibration}{16}
+\contentsline {subsection}{\numberline {4.1.1}Data needed for intensity calibration}{16}
+\contentsline {subsection}{\numberline {4.1.2}Generating a spectral radiance file}{17}
+\contentsline {section}{\numberline {4.2}Branching fractions and log(gf)s}{18}
+\contentsline {subsection}{\numberline {4.2.1}Finding branching fractions and log(gf)s}{18}
+\contentsline {subsection}{\numberline {4.2.2}Uncertainties in branching fractions and log(gf)s}{20}
+\contentsline {chapter}{\numberline {5}An Example}{22}
+\contentsline {section}{\numberline {5.1}The example files}{22}
+\contentsline {section}{\numberline {5.2}Creating the `example.fts' project}{23}

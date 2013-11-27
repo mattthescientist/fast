@@ -1,0 +1,103 @@
+# Makefile
+
+CC = @CXX@
+SRC_DIR := src
+BIN_DIR := @prefix@/bin
+FAST_DIR := @prefix@/fast
+
+# Output files
+BIN := fast
+
+# Source files: COM common, GSL Gsl only, MIN Minuit only
+_OBJ_COM := about.o voigtlsqfit.o kzline.o kzlist.o xgline.o graph.o linedata.o \
+  xgspectrum.o outputwindow.o optionswindow.o analyserwindow.o LineTool.o
+
+OBJ_COM := $(patsubst %,$(SRC_DIR)/%,$(_OBJ_COM))
+
+# Flags
+C_FLAGS := `pkg-config --cflags --libs gtkmm-2.4` -Wall
+GTK_FLAGS := `pkg-config --cflags --libs gtkmm-2.4` -Wall -o $(BIN)  -Wl,--no-as-needed -lgsl -lgslcblas
+
+# General object dependencies
+%.o: %.cpp %.h
+	$(CC) -c -o $@ $< $(C_FLAGS)
+
+# Rules for building FAST
+.PHONY: all install clean
+
+all: $(OBJ_COM)
+	$(CC) $(OBJ_COM) $(GTK_FLAGS)
+
+install:
+	@echo "Installing FAST ..."
+	@if [ ! -d @prefix@ ]; then mkdir -m 755 @prefix@ ; fi
+	@echo "  copying fast binary to $(BIN_DIR)"
+	@if [ ! -d $(BIN_DIR) ]; then mkdir -m 755 $(BIN_DIR) ; fi
+	@install -m 755 fast $(BIN_DIR)
+	@echo "  copying documentation to $(FAST_DIR)"
+	@if [ ! -d $(FAST_DIR) ]; then mkdir -m 755 $(FAST_DIR) ; fi
+	@install -m 644 ./docs/fast.pdf $(FAST_DIR)
+	@echo "  installing man page (this will fail if you do not have root access)"
+	-@install -m 644 ./docs/fast.1.gz /usr/share/man/man1/ 2> /dev/null
+	@echo "done"
+
+clean:
+	@echo "Removing object files from FAST source directory"
+	@rm -f $(OBJ_COM)
+
+# Explicit declariation of dependencies for src objects that are not satisfied
+# by the general declaration (%.o:...) above. i.e. classes that inherit others
+# and source files that include headers with different root names.
+$(SRC_DIR)/graph.o: $(SRC_DIR)/graph.cpp $(SRC_DIR)/graph.h \
+   $(SRC_DIR)/xgline.cpp $(SRC_DIR)/xgline.h
+	$(CC) -c -o $@ $< $(C_FLAGS)
+  
+$(SRC_DIR)/kzlist.o: $(SRC_DIR)/kzlist.cpp $(SRC_DIR)/kzlist.h \
+   $(SRC_DIR)/kzline.cpp $(SRC_DIR)/kzline.h
+	$(CC) -c -o $@ $< $(C_FLAGS)                
+
+$(SRC_DIR)/linedata.o: $(SRC_DIR)/linedata.cpp $(SRC_DIR)/linedata.h \
+   $(SRC_DIR)/xgline.cpp $(SRC_DIR)/xgline.h \
+   $(SRC_DIR)/graph.cpp $(SRC_DIR)/graph.h
+	$(CC) -c -o $@ $< $(C_FLAGS)
+
+$(SRC_DIR)/LineTool.o: $(SRC_DIR)/LineTool.cpp $(SRC_DIR)/analyserwindow.cpp \
+   $(SRC_DIR)/analyserwindow_signal.cpp $(SRC_DIR)/analyserwindow.h \
+   $(SRC_DIR)/analyserwindow_construct.cpp
+	$(CC) -c -o $@ $< $(C_FLAGS)
+
+$(SRC_DIR)/xgline.o: $(SRC_DIR)/xgline.cpp $(SRC_DIR)/xgline.h \
+   $(SRC_DIR)/ErrDefs.h
+	$(CC) -c -o $@ $< $(C_FLAGS)
+
+$(SRC_DIR)/voigtlsqfit.o: $(SRC_DIR)/voigtlsqfit.cpp $(SRC_DIR)/voigtlsqfit.h
+	$(CC) -c -o $@ $< $(C_FLAGS)
+        
+$(SRC_DIR)/xgspectrum.o: $(SRC_DIR)/xgspectrum.cpp $(SRC_DIR)/xgspectrum.h
+	$(CC) -c -o $@ $< $(C_FLAGS) -Wl,--no-as-needed -lgsl -lgslcblas 
+
+$(SRC_DIR)/analyserwindow.o: $(SRC_DIR)/analyserwindow.cpp \
+   $(SRC_DIR)/XGremlin.xpm \
+   $(SRC_DIR)/Targets.xpm \
+   $(SRC_DIR)/TypeDefs.h \
+   $(SRC_DIR)/about.h \
+   $(SRC_DIR)/about.cpp \
+   $(SRC_DIR)/outputwindow.h \
+   $(SRC_DIR)/outputwindow.cpp \
+   $(SRC_DIR)/optionswindow.h \
+   $(SRC_DIR)/optionswindow.cpp \
+   $(SRC_DIR)/analyserwindow_io.cpp \
+   $(SRC_DIR)/analyserwindow_refresh.cpp \
+   $(SRC_DIR)/analyserwindow_signal_click.cpp \
+   $(SRC_DIR)/analyserwindow_signal_file.cpp \
+   $(SRC_DIR)/analyserwindow_signal_data.cpp \
+   $(SRC_DIR)/analyserwindow_signal_popup.cpp \
+   $(SRC_DIR)/analyserwindow_signal.cpp \
+   $(SRC_DIR)/analyserwindow_construct.cpp \
+   $(SRC_DIR)/analyserwindow_errors.cpp \
+   $(SRC_DIR)/voigtlsqfit.cpp \
+   $(SRC_DIR)/analyserwindow.h $(SRC_DIR)/linedata.cpp $(SRC_DIR)/linedata.h \
+   $(SRC_DIR)/graph.cpp $(SRC_DIR)/graph.h $(SRC_DIR)/kzlist.cpp \
+   $(SRC_DIR)/kzlist.h $(SRC_DIR)/xgline.cpp $(SRC_DIR)/xgline.h \
+   $(SRC_DIR)/xgspectrum.h $(SRC_DIR)/ErrDefs.h $(SRC_DIR)/lineio.cpp $(SRC_DIR)/plotFns.cpp
+	$(CC) -c -o $@ $< $(C_FLAGS)
