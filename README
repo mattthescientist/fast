@@ -1,5 +1,5 @@
 ================================================================================
-The FTS Atomic Spectrum Tool (FAST) - version 0.6
+The FTS Atomic Spectrum Tool (FAST) - version 0.6.3
 Source code archive
 ================================================================================
 
@@ -46,4 +46,3 @@ fast.pdf      - PDF version of the FAST manual
 *.h           - C++ headers. File descriptions are at the top of each file
 *.cpp         - C++ source code. File descriptions are at the top of each file
 *.xpm         - Toolbar icon files
-

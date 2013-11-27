@@ -1,0 +1,7 @@
+*.[oa]
+*~
+*.bak
+fast
+Makefile
+config.status
+config.log
