@@ -91,7 +91,13 @@ void OptionsWindow::on_button_cancel () {
 }
 
 
-
+//------------------------------------------------------------------------------
+// set_correct_snr () :
+//
+void OptionsWindow::set_correct_snr (bool a) {
+  CorrectSignalToNoise = a;
+  on_button_cancel ();
+}
 
 
 

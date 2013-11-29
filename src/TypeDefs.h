@@ -8,7 +8,12 @@
 #include "kzline.h"
 #include "linedata.h"
 
-#define FAST_VERSION "0.6.3"
+#define FAST_VERSION "0.6.4a"
+
+// Define an FTS file version. This is stored in the FTS file and can be used
+// for backward compatibility at a later date should a new file version be
+// created.
+#define FTS_FILE_VERSION 2
 
 // The number of data points contained in the synthetic Voigt profiles.
 #define NUM_VOIGT_POINTS 200

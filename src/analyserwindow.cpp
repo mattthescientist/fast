@@ -34,6 +34,7 @@
 #include "analyserwindow_refresh.cpp"   // Functions to refresh window widgets
 #include "analyserwindow_errors.cpp"    // Error handlers for AnalyserWindow
 
+using namespace::std;
 
 void AnalyserWindow::projectHasChanged (bool ProjectHasChanged) {
   if (ProjectHasChanged) {

@@ -95,6 +95,7 @@ void AnalyserWindow::fileOpen (string Filename) {
   Gtk::TreeModel::Row Row;
   ifstream BinIn (Filename.c_str (), ios::in|ios::binary);
   ostringstream oss;
+  int FileVersion;
   if (BinIn.is_open ()) {
     LevelLines.clear ();
     KuruczList.clear ();
@@ -111,10 +112,26 @@ void AnalyserWindow::fileOpen (string Filename) {
     CurrentFilename = "";
     projectHasChanged (false);
     
-    readFileVersion (&BinIn);
+    // First read the FTS file version from the input file.
+    FileVersion = readFileVersion (&BinIn);
+
+    // If FileVersion is greater than FTS_FILE_VERSION, the user must be
+    // running an old version of FAST and thus attempting to load a file
+    // that is newer than, and so not compatible with the running code.
+    // Catch this error and abort.
+    if (FileVersion > FTS_FILE_VERSION) {
+    	BinIn.close ();
+    	oss << "Error : Unable to open " << Filename;
+    	Gtk::MessageDialog dialog(*this, oss.str (), false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+    	dialog.set_secondary_text("This file was saved with a newer version of FAST.\nPlease upgrade FAST to the latest version and try again.");
+    	dialog.run();
+    	return;
+    }
+
+    // File version is OK, so continue loading.
     loadKuruczList (&BinIn);
     loadExptSpectra (&BinIn);
-    loadInterface (&BinIn);
+    loadInterface (&BinIn, FileVersion);
           
     BinIn.close ();
     

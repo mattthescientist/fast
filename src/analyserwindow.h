@@ -194,7 +194,7 @@ class AnalyserWindow : public Gtk::Window {
     int readFileVersion (ifstream *BinIn);
     void loadExptSpectra (ifstream *BinIn);
     void loadKuruczList (ifstream *BinIn);
-    void loadInterface (ifstream *BinIn);
+    void loadInterface (ifstream *BinIn, int FileVersion);
     void refreshKuruczList ();
     void refreshSpectraList ();
     void projectHasChanged (bool Changed);

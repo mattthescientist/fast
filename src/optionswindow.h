@@ -63,6 +63,7 @@ class OptionsWindow : public Gtk::Window {
     ~OptionsWindow () { /* Does nothing */ }
 
     bool correct_snr () { return CorrectSignalToNoise; }
+    void set_correct_snr (bool a);
 };
 
 #endif // LINE_ANALYSER_OPTIONS_WINDOW

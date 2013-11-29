@@ -20,11 +20,6 @@
 // This file contains I/O functions for saving FAST projects to disk and
 // restoring them later on.
 
-// Define an FTS file version. This is stored in the FTS file and can be used
-// for backward compatibility at a later date should a new file version be 
-// created.
-#define FTS_FILE_VERSION 1
-
 //==============================================================================
 // ANALYSERWINDOW BINARY I/O FUNCTIONS
 //==============================================================================
@@ -391,17 +386,19 @@ void AnalyserWindow::loadKuruczList (ifstream *BinIn) {
 // saveInterface (ofstream) : Saves interface settings to the project file
 // attached to the ofstream at arg1.
 void AnalyserWindow::saveInterface (ofstream *BinOut) {
-  bool Selected;
+  bool Selected, CorrectSignalToNoise;
   for (unsigned int Level = 0; Level < LevelLines.size (); Level ++) {
     for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
       for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
         if (LevelLines[Level][i][j].xgLine->wavenumber () > 0.0) {
           Selected = LevelLines[Level][i][j].plot -> selected ();
-          BinOut->write ((char*)&Selected, sizeof(bool));
+          BinOut->write ((char*) &Selected, sizeof (bool));
         }
       }
     }
   }
+  CorrectSignalToNoise = Options.correct_snr ();
+  BinOut->write ((char*) &CorrectSignalToNoise, sizeof (bool));
 }
 
 
@@ -409,8 +406,8 @@ void AnalyserWindow::saveInterface (ofstream *BinOut) {
 // loadInterface (ifstream) : Loads interface settings from the project file
 // attached to the ifstream at arg1.
 //
-void AnalyserWindow::loadInterface (ifstream *BinIn) {
-  bool Selected;
+void AnalyserWindow::loadInterface (ifstream *BinIn, int FileVersion) {
+  bool Selected, CorrectSignalToNoise;
   for (unsigned int Level = 0; Level < LevelLines.size (); Level ++) {
     for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
       for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
@@ -420,6 +417,12 @@ void AnalyserWindow::loadInterface (ifstream *BinIn) {
         }
       }
     }
+  }
+  // FTS_FILE_VERSION 1 did not save the CorrectSignalToNoise boolean, so only
+  // attempt to load this variable if the current file version is greater than 1.
+  if (FileVersion > 1) {
+	BinIn->read ((char*)&CorrectSignalToNoise, sizeof(bool));
+	Options.set_correct_snr (CorrectSignalToNoise);
   }
   updateKuruczCompleteness ();
 }

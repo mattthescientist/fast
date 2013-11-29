@@ -502,6 +502,7 @@ void XgSpectrum::calculateResponseFunction () {
   double ySpline, yerr, wlen, ymax, xi, yi;
   vector <Coord> ResMatchedStdLamp;
   Coord NextPoint;
+  ymax = 0.0;
   if (Radiance.size () > 0 && StdLampSpectrum.size () > 0) {
     if (!RadianceSplineCreated) calculateRadianceSpline ();
     //ResMatchedStdLamp = matchStandardLampResolution ();
