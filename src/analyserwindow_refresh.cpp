@@ -304,8 +304,8 @@ vector <DataBF> AnalyserWindow::calculateBranchingFractions (
                   BestScalingFactor.b = 0;
                   BestScalingFactor.Ratio = 1.0;
                   BestScalingFactor.Error = 0.0;
-                  cout << "Unable to link " << SpectrumLabels [j] << " and " 
-                    << SpectrumLabels [0] << endl;
+//                  cout << "Unable to link " << SpectrumLabels [j] << " and "
+//                    << SpectrumLabels [0] << endl;
                 }
               }
             }

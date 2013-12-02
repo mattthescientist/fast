@@ -253,60 +253,62 @@ void OutputWindow::set_result_strings () {
             break;
           case 2:
             NextField.List = OUTPUT_BF_LIST + OUTPUT_FITTED_LIST + OUTPUT_TARGET_LIST;
-            oss.str (""); oss << Results[Level][Line].wavenumber;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(3) << Results[Level][Line].wavenumber;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 3:
             NextField.List = OUTPUT_BF_LIST + OUTPUT_FITTED_LIST;
-            oss.str (""); oss << Results[Level][Line].eqwidth;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(0) << Results[Level][Line].eqwidth;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 4:
-            oss.str (""); oss << Results[Level][Line].err_line;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(2) << Results[Level][Line].err_line;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 5:
-            oss.str (""); oss << Results[Level][Line].err_cal;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(2) << Results[Level][Line].err_cal;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 6:
-            oss.str (""); oss << Results[Level][Line].err_trans;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(2) << Results[Level][Line].err_trans;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 7:
-            oss.str (""); oss << Results[Level][Line].err_total;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(2) << Results[Level][Line].err_total;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 8:
-            oss.str (""); oss << Results[Level][Line].err_eqwidth;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(0) << Results[Level][Line].err_eqwidth;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 9:
-            oss.str (""); oss << Results[Level][Line].br_frac;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(2) << Results[Level][Line].br_frac;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 10:
-            oss.str (""); oss << Results[Level][Line].err_br_frac;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(2) << Results[Level][Line].err_br_frac;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 11:
-            oss.str (""); oss << Results[Level][Line].a;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(3) << (Results[Level][Line].a / pow(10.0,6));
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 12:
-            oss.str (""); oss << Results[Level][Line].err_a;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(2) << Results[Level][Line].err_a;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 13:
-            oss.str (""); oss << Results[Level][Line].loggf;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(3) << Results[Level][Line].loggf;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 14:
-            oss.str (""); oss << Results[Level][Line].dex; 
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(3) << Results[Level][Line].dex;
             ResultsForNextLevel.push_back (oss.str ());
             break;
         }
       }
+      oss.unsetf (ios::scientific);
+      oss.unsetf (ios::fixed);
       NextField.Value.push_back (ResultsForNextLevel);
     }
     NextField.ResultIndex = l;
@@ -329,35 +331,37 @@ void OutputWindow::set_result_strings () {
             ResultsForNextLevel.push_back(Fits[Level][Line].id ());
             break;
           case 2:
-            oss.str (""); oss << Fits[Level][Line].peak ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(1) << Fits[Level][Line].peak ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 3:
-            oss.str (""); oss << Fits[Level][Line].width ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(2) << Fits[Level][Line].width ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 4:
-            oss.str (""); oss << Fits[Level][Line].dmp ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(4) << Fits[Level][Line].dmp ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 5:
-            oss.str (""); oss << Fits[Level][Line].epstot ();
+            oss.str (""); oss << setiosflags(ios::scientific) << setprecision(4) << Fits[Level][Line].epstot ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 6:
-            oss.str (""); oss << Fits[Level][Line].epsevn ();
+            oss.str (""); oss << setiosflags(ios::scientific) << setprecision(4) << Fits[Level][Line].epsevn ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 7:
-            oss.str (""); oss << Fits[Level][Line].epsodd ();
+            oss.str (""); oss << setiosflags(ios::scientific) << setprecision(4) << Fits[Level][Line].epsodd ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 8:
-            oss.str (""); oss << Fits[Level][Line].epsran ();
+            oss.str (""); oss << setiosflags(ios::scientific) << setprecision(4) << Fits[Level][Line].epsran ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
         }
       }
+      oss.unsetf (ios::scientific);
+      oss.unsetf (ios::fixed);
       NextField.Value.push_back (ResultsForNextLevel); 
     }
     NextField.ResultIndex = NUM_BF_OUTPUT_FIELDS + l;
@@ -373,41 +377,34 @@ void OutputWindow::set_result_strings () {
       for (unsigned int Line = 0; Line < Fits[Level].size (); Line ++) {
         switch (l) {
           case 0:
-            oss.precision (4);
-            oss.str (""); oss << Targets[Level][Line].lambda ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(4) << Targets[Level][Line].lambda ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 1:
-            oss.precision (3);
-            oss.str (""); oss << Targets[Level][Line].loggf ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(3) << Targets[Level][Line].loggf ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 2:
-            oss.precision (3);
-            oss.str (""); oss << Targets[Level][Line].brFrac ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(3) << Targets[Level][Line].brFrac ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 3:
-            oss.precision (3);
-            oss.str (""); oss << Targets[Level][Line].eLower ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(3) << Targets[Level][Line].eLower ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 4:
-            oss.precision (1);
-            oss.str (""); oss << Targets[Level][Line].jLower ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(1) << Targets[Level][Line].jLower ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 5:
             ResultsForNextLevel.push_back (Targets[Level][Line].configLower ());
             break;
           case 6:
-            oss.precision (3);
-            oss.str (""); oss << Targets[Level][Line].eUpper ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(3) << Targets[Level][Line].eUpper ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 7:
-            oss.precision (1);
-            oss.str (""); oss << Targets[Level][Line].jUpper ();
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(1) << Targets[Level][Line].jUpper ();
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 8:
@@ -415,6 +412,8 @@ void OutputWindow::set_result_strings () {
             break;
         }
       }
+      oss.unsetf (ios::scientific);
+      oss.unsetf (ios::fixed);
       NextField.Value.push_back (ResultsForNextLevel);
     }
     NextField.ResultIndex = NUM_BF_OUTPUT_FIELDS + NUM_FITTED_OUTPUT_FIELDS + l;

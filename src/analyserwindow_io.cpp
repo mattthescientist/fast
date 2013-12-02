@@ -187,7 +187,7 @@ void AnalyserWindow::loadExptSpectra (ifstream *BinIn) {
   // Determine how many experimental spectra there are and either load each in
   // turn. If there are no spectra, only the NumSpectra will be loaded.
   BinIn->read ((char*)&NumSpectra, sizeof(unsigned int));
-  cout << "NumSpectra: " << NumSpectra << endl;
+//  cout << "NumSpectra: " << NumSpectra << endl;
   // Load each experimental spectrum in turn
   for (unsigned int i = 0; i < NumSpectra; i ++) {
     NextSpectrum.clear ();

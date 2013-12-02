@@ -1,3 +1,23 @@
+// The FTS Atomic Spectrum Tool (FAST)
+// Copyright (C) 2011-2013 M. P. Ruffoni
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+//==============================================================================
+// TypeDefs.h
+//==============================================================================
+// This file contains definitions that are used throughout FAST.
 #ifndef FAST_TYPEDEFS
 #define FAST_TYPEDEFS
 
@@ -8,6 +28,8 @@
 #include "kzline.h"
 #include "linedata.h"
 
+// The current version of FAST is named here. This is printed on startup and in
+// the FAST help->about window.
 #define FAST_VERSION "0.6.4a"
 
 // Define an FTS file version. This is stored in the FTS file and can be used
@@ -38,8 +60,12 @@
 // Default file save names for project exports
 #define AW_DEF_TARGETS_NAME "targets.txt"
 
+// Any line starting with IO_COMMENT will be ignored in text I/O routines
 #define IO_COMMENT '#'
 
+// Occasionally, a user may want to fit a line near the target line if it is partially blended.
+// To prevent FAST using this line in its calculations, that line may be designed a FAKE LINE
+// by giving it the following tag on loading.
 #define FAKE_LINE_TAG "*Fake Line*                     "
 
 // Fields to include in the outputwindow
@@ -47,9 +73,9 @@
 #define NUM_TARGET_OUTPUT_FIELDS 9
 #define NUM_FITTED_OUTPUT_FIELDS 9
 const std::string FAST_BF_FIELD_NAMES [NUM_BF_OUTPUT_FIELDS] =  {"Spectrum Tag", 
-  "Line Index", "Wavenumber", "Intensity", "U (S/N)", "U (Cal.)", "U (Trans.)",
-  "U (Total)", "U (Int.)", "Branching Fraction", "U (Br. Frac.)",
-  "Transition Probability", "U (Tr. Prob.)", "log (gf)", "U (log(gf))" };
+  "Line Index", "Wavenumber", "Intensity", "U (S/N) / %", "U (Cal.) / %", "U (Trans.) / %",
+  "U (Total) / %", "U (Int.)", "Branching Fraction", "U (Br. Frac.) / %",
+  "Transition Probability x 10^{6}", "U (Tr. Prob.) / %", "log (gf)", "U (log(gf)) / dex" };
 const std::string FAST_TARGET_FIELD_NAMES [NUM_TARGET_OUTPUT_FIELDS] = {
   "Wavelength", "Est. log(gf)", "Est. Branching Fraction", 
   "E Lower", "J Lower", "Config Lower", "E Upper", "J Upper", "Config Upper" };
