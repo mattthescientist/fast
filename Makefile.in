@@ -95,6 +95,7 @@ $(SRC_DIR)/analyserwindow.o: $(SRC_DIR)/analyserwindow.cpp \
    $(SRC_DIR)/analyserwindow_signal.cpp \
    $(SRC_DIR)/analyserwindow_construct.cpp \
    $(SRC_DIR)/analyserwindow_errors.cpp \
+   $(SRC_DIR)/analyserwindow_config.cpp \
    $(SRC_DIR)/voigtlsqfit.cpp \
    $(SRC_DIR)/analyserwindow.h $(SRC_DIR)/linedata.cpp $(SRC_DIR)/linedata.h \
    $(SRC_DIR)/graph.cpp $(SRC_DIR)/graph.h $(SRC_DIR)/kzlist.cpp \

@@ -41,6 +41,7 @@ AnalyserWindow::AnalyserWindow () {
   CurrentFilename = "";
   DefaultFolder = "";
   ProjectChangedSinceSave = false;
+  readConfigFile ();
 
   // Build the menubar and toolbar and add them to the top of the BaseBox
   buildMenubarAndToolbar ();
@@ -563,7 +564,9 @@ AnalyserWindow::~AnalyserWindow () {
 // buildMenubar () : Constructs the menubar for the AnalyserWindow. This func is
 // called from the class constructor when a new AnalyserWindow is created.
 //
-void AnalyserWindow::buildMenubarAndToolbar () {
+void AnalyserWindow::buildMenubarAndToolbar (bool PackWidgets) {
+  ostringstream oss;
+  unsigned int Separator;
 
   // Create the "File" menu
   m_refActionGroup = Gtk::ActionGroup::create();
@@ -579,15 +582,19 @@ void AnalyserWindow::buildMenubarAndToolbar () {
   m_refActionGroup->add( Gtk::Action::create("FileSaveAs", Gtk::Stock::SAVE_AS),
     Gtk::AccelKey ("<control><shift>s"),
     sigc::mem_fun(this, &AnalyserWindow::on_file_save_as) );
-//  m_refActionGroup->add( Gtk::Action::create("FileSaveLevel",
-//    "Save Level", "Saves the currently selected level"),
-//    sigc::mem_fun(this, &AnalyserWindow::on_file_save_level) );
   m_refActionGroup->add( Gtk::Action::create("FileExportProject", 
     "Export Project"), Gtk::AccelKey ("<control>e"),
     sigc::mem_fun(this, &AnalyserWindow::on_file_export_project) );
   m_refActionGroup->add( Gtk::Action::create("FilePrintLevel", Gtk::Stock::PRINT,
     "Print Level", "Prints the currently selected level"),
     sigc::mem_fun(this, &AnalyserWindow::on_file_print_level) );
+  for (unsigned int i = 0; i < RecentFiles.size (); i ++) {
+	oss.str ("");
+	oss << "Recent" << i;
+	Separator = RecentFiles[i].find_last_of("/\\");
+    m_refActionGroup->add( Gtk::Action::create(oss.str().c_str(), RecentFiles[i].substr (Separator + 1)),
+      sigc::bind(sigc::mem_fun(this, &AnalyserWindow::fileOpen), RecentFiles[i]) );
+  }
   m_refActionGroup->add( Gtk::Action::create("Quit", Gtk::Stock::QUIT,
     "_Quit", "Quit the program. Unsaved data will be lost."),
     sigc::mem_fun(this, &AnalyserWindow::on_file_quit) );
@@ -625,7 +632,7 @@ void AnalyserWindow::buildMenubarAndToolbar () {
   // Create toolbar items
   m_refActionGroup->add( Gtk::Action::create("ToolLoadTarget", 
     Gtk::StockID("targets"), "1. Add Target Lines",
-    "Specifies which lines will be targetted by the current project"),
+    "Specifies which lines will be targeted by the current project"),
     sigc::mem_fun(this, &AnalyserWindow::on_data_load_kurucz) );
   m_refActionGroup->add( Gtk::Action::create("ToolLoadExperiment", 
     Gtk::StockID("spectra"), "2. Add Spectral Data",
@@ -642,16 +649,23 @@ void AnalyserWindow::buildMenubarAndToolbar () {
   add_accel_group(m_refUIManager->get_accel_group());
 
   //Layout the actions in a menubar and toolbar:
-  Glib::ustring ui_info = 
-        "<ui>"
-        "  <menubar name='MenuBar'>"
-        "    <menu action='FileMenu'>"
-        "      <menuitem action='FileNew'/>"
-        "      <menuitem action='FileOpen'/>"
-        "      <menuitem action='FileSave'/>"
-        "      <menuitem action='FileSaveAs'/>"
-        "      <menuitem action='FileExportProject'/>"
-//        "      <menuitem action='FilePrintLevel'/>"
+  string MenuInterface =
+		"<ui>"
+		"  <menubar name='MenuBar'>"
+		"    <menu action='FileMenu'>"
+		"      <menuitem action='FileNew'/>"
+		"      <menuitem action='FileOpen'/>"
+		"      <menuitem action='FileSave'/>"
+		"      <menuitem action='FileSaveAs'/>"
+		"      <menuitem action='FileExportProject'/>"
+		"      <separator action='sep'/>";
+  for (unsigned int i = 0; i < RecentFiles.size (); i ++) {
+	  oss.str ("");
+	  oss << "      <menuitem action='Recent" << i << "'/>";
+	  MenuInterface += oss.str ();
+  }
+  MenuInterface +=
+  		"      <separator action='sep'/>"
         "      <menuitem action='Quit'/>"
         "    </menu>"
         "    <menu action='DataMenu'>"
@@ -672,7 +686,7 @@ void AnalyserWindow::buildMenubarAndToolbar () {
         "    <toolitem action='FileNew'/>"
         "    <toolitem action='FileOpen'/>"
         "    <toolitem action='FileSave'/>"
-//        "    <toolitem action='FilePrintLevel'/>"
+
         "    <separator action='sep'/>"
         "    <toolitem action='ToolLoadTarget'/>"
         "    <toolitem action='ToolLoadExperiment'/>"
@@ -680,7 +694,8 @@ void AnalyserWindow::buildMenubarAndToolbar () {
         "    <separator action='sep'/>"
         "  </toolbar>"
         "</ui>";
-        
+  Glib::ustring ui_info = MenuInterface.c_str();
+
   // Build the menus
   #ifdef GLIBMM_EXCEPTIONS_ENABLED
   try
@@ -701,12 +716,14 @@ void AnalyserWindow::buildMenubarAndToolbar () {
   #endif //GLIBMM_EXCEPTIONS_ENABLED
   
   // Create widgets for both the menubar and toolbar, then pack them
-  Gtk::Widget* pMenubar = m_refUIManager->get_widget("/MenuBar");
-  Gtk::Toolbar* pToolbar = dynamic_cast<Gtk::Toolbar*>(m_refUIManager->get_widget("/ToolBar"));
+  pMenubar = m_refUIManager->get_widget("/MenuBar");
   if (pMenubar) BaseBox.pack_start(*pMenubar, Gtk::PACK_SHRINK);
-  if (pToolbar) {
-    BaseBox.pack_start(*pToolbar, Gtk::PACK_SHRINK);
-    pToolbar -> set_toolbar_style (Gtk::TOOLBAR_BOTH);
+  if (PackWidgets) {
+	  Gtk::Toolbar* pToolbar = dynamic_cast<Gtk::Toolbar*>(m_refUIManager->get_widget("/ToolBar"));
+	  if (pToolbar) {
+		BaseBox.pack_start(*pToolbar, Gtk::PACK_SHRINK);
+		pToolbar -> set_toolbar_style (Gtk::TOOLBAR_BOTH);
+	  }
   }
 }
 

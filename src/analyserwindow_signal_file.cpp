@@ -149,12 +149,14 @@ void AnalyserWindow::fileOpen (string Filename) {
       Select->select (Row);
     
       updatePlottedData();
+      writeConfigFile ();
     }
   } else {
     oss << "Error : Unable to open " << Filename;
     Gtk::MessageDialog dialog(*this, oss.str (), false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
     dialog.set_secondary_text("Check the file exists and is readable.");
     dialog.run();
+    removeFromConfigFile (Filename);
   }
 }
 
@@ -319,6 +321,7 @@ void AnalyserWindow::on_file_save_as () {
       }
       try {
         saveProject (Filename);
+        writeConfigFile ();
       } catch (Error *e) {
         // Error message already displayed. Do nothing.
       }

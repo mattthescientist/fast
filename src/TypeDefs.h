@@ -30,7 +30,7 @@
 
 // The current version of FAST is named here. This is printed on startup and in
 // the FAST help->about window.
-#define FAST_VERSION "0.6.4a"
+#define FAST_VERSION "0.6.4"
 
 // Define an FTS file version. This is stored in the FTS file and can be used
 // for backward compatibility at a later date should a new file version be
@@ -56,6 +56,10 @@
 #define AW_CHILD_EQWIDTH_NORM_COLOUR "#ADDDAD"
 #define AW_CHILD_EQWIDTH_NO_NORM_COLOUR "#DDADAD"
 #define AW_CHILD_EQWIDTH_SOME_NORM_COLOUR "#DDDD8D"
+
+// FAST configuration file in the user's home directory
+#define FAST_CONFIG_FILE ".fastrc"
+#define NUM_RECENT_FILES 4
 
 // Default file save names for project exports
 #define AW_DEF_TARGETS_NAME "targets.txt"

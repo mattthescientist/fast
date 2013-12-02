@@ -117,6 +117,9 @@ class AnalyserWindow : public Gtk::Window {
     // GTKmm VBox to hold all the widgets in the AnalyserWindow
     Gtk::VBox BaseBox;
 
+    // GTKmm Menubar. Declared here so the recent file list can be updated
+    Gtk::Widget* pMenubar;
+
     // Primary GTKmm Widgets for the AnalyserWindow
     Gtk::Frame frameSpectra;           // Contains bookSpectra
     Gtk::Frame frameLevels;            // Contains scrollLevels
@@ -168,9 +171,15 @@ class AnalyserWindow : public Gtk::Window {
     Glib::RefPtr<Gtk::TreeStore> modelDataXGr;
     Glib::RefPtr<Gtk::TreeStore> modelDataComp;
     Glib::RefPtr<Gtk::TreeStore> modelDataBF;
+
+    // List of recently loaded .FTS files for the File toolbar menu
+    vector <string> RecentFiles;
         
     // Private class methods
-    void buildMenubarAndToolbar ();
+    void readConfigFile ();
+    void writeConfigFile ();
+    void removeFromConfigFile (string Filename);
+    void buildMenubarAndToolbar (bool PackWidgets = true);
     void add_stock_item(const char *name[], Glib::ustring id, Glib::ustring label);
     void plotLines 
       (vector < vector <LinePair *> > PlotLines, vector <unsigned int> PlotOrder);

@@ -33,6 +33,7 @@
 #include "analyserwindow_io.cpp"        // I/O routines for ftslinetool projects
 #include "analyserwindow_refresh.cpp"   // Functions to refresh window widgets
 #include "analyserwindow_errors.cpp"    // Error handlers for AnalyserWindow
+#include "analyserwindow_config.cpp"	// I/O routines for the FAST config file
 
 using namespace::std;
 
