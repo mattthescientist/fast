@@ -5,3 +5,4 @@ fast
 Makefile
 config.status
 config.log
+.settings

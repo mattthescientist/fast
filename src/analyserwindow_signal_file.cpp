@@ -349,7 +349,6 @@ void AnalyserWindow::saveProject (string Filename) throw (Error){
     oss << "Successfully saved " << CurrentFilename.substr(FilePos) << ".";
     Status.push (oss.str());
     projectHasChanged (false);
-    m_refActionGroup->get_action("FileSave")->set_sensitive(false);
   } else {
     oss << "Error : Unable to save " << Filename;
     Gtk::MessageDialog dialog(*this, oss.str (), false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);

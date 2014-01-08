@@ -22,6 +22,7 @@
 #include <gtkmm/main.h>
 #include <iostream>
 #include "analyserwindow.h"
+#include <string>
 
 using namespace::std;
 
@@ -32,10 +33,12 @@ int main(int argc, char *argv[])
 {
   Gtk::Main kit(argc, argv);
   AnalyserWindow win;
+  string CurrentDir = getenv ("PWD");
   cout << "The FTS Atomic Spectrum Tool (FAST) v" << FAST_VERSION << " (built " << __DATE__ << ")" << endl;
   if (argc > 1) {
     cout << "Loading " << argv[1] << "..." << endl;
-    win.fileOpen (argv[1]);
+    CurrentDir = CurrentDir + "/" + argv[1];
+    win.fileOpen (CurrentDir);
   }
   Gtk::Main::run(win);
   return 0;

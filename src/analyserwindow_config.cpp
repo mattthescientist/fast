@@ -56,7 +56,7 @@ void AnalyserWindow::writeConfigFile () {
 
 	// Only update the config file if the current file is different to the one
 	// at the top of the list of recently loaded files.
-	if (CurrentFilename != RecentFiles [0]) {
+	if (RecentFiles.size() == 0 || CurrentFilename != RecentFiles [0]) {
 
 		// Insert the current file at the start of recent files
 		RecentFiles.insert (RecentFiles.begin (), CurrentFilename);
