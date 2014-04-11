@@ -503,6 +503,9 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
           AveError = 0.0;
           RatioDenom = 0.0;
           LinkFound = false;
+          // First check to see if the specta have been explicitly linked together by the user.
+          // In such cases ALL lines common to both spectra may be used to calculate the transfer
+          // ratio rather than only the lines belonging to the current upper level.
           for (unsigned int i = 0; i < LinkedSpectra.size (); i ++) {
             try {
               if (LinkedSpectra [i].a == SpectrumOrder[k] &&
@@ -533,6 +536,8 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
               }
             }
           }
+          // If the spectra have not been linked by the user only the common lines belonging to the
+          // current upper level may be used to calculate the transfer ratio.
           if (!LinkFound) {
             NumLinesCompared = 0;
             // Compare matching lines in each of the two spectra
@@ -552,8 +557,8 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
                   / (OrderedPairs [j][i]->xgLine->eqwidth ()
                   / ExptSpectra[SpectrumOrder[j]].response (OrderedPairs[j][i]->xgLine->wavenumber ()));
                 
-//                cout << "[" << k << "][" << i << "]: " << OrderedPairs [k][i]->xgLine->wavenumber ()<< "  " << OrderedPairs [k][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[k]].response (OrderedPairs[k][i]->xgLine->wavenumber ()) << flush;
-//                cout << "    [" << j << "][" << i << "]: " << OrderedPairs [j][i]->xgLine->wavenumber () << "  " << OrderedPairs [j][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[j]].response (OrderedPairs[j][i]->xgLine->wavenumber ()) << endl;
+                cout << "[" << k << "][" << i << "]: " << OrderedPairs [k][i]->xgLine->wavenumber ()<< "  " << OrderedPairs [k][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[k]].response (OrderedPairs[k][i]->xgLine->wavenumber ()) << flush;
+                cout << "    [" << j << "][" << i << "]: " << OrderedPairs [j][i]->xgLine->wavenumber () << "  " << OrderedPairs [j][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[j]].response (OrderedPairs[j][i]->xgLine->wavenumber ()) << endl;
                 if (Options.correct_snr ()) {
                   SNRa = OrderedPairs [k][i]->xgLine->snr () / OrderedPairs [k][i]->xgLine->noise();
                   SNRb = OrderedPairs [j][i]->xgLine->snr () / OrderedPairs [j][i]->xgLine->noise();
@@ -561,6 +566,8 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
                   SNRa = OrderedPairs [k][i]->xgLine->snr ();
                   SNRb = OrderedPairs [j][i]->xgLine->snr ();
                 }
+
+                // Calculate the weighted average of the transfer ratio of each common line
                 Error = sqrt(pow (SNRa, -2.0) + pow (SNRb, -2.0));
                 AveRatio += Ratio / pow (Error, 2.0);
                 RatioDenom += pow (Error, -2.0);

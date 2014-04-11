@@ -282,7 +282,7 @@ void OutputWindow::set_result_strings () {
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 9:
-            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(3) << Results[Level][Line].br_frac;
+            oss.str (""); oss << setiosflags(ios::fixed) << setprecision(4) << Results[Level][Line].br_frac;
             ResultsForNextLevel.push_back (oss.str ());
             break;
           case 10:
