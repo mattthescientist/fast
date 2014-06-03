@@ -441,7 +441,7 @@ void AnalyserWindow::updateBranchingFractions (
   for (unsigned int j = 0; j < AllBrFracData.size (); j ++) { 
     row = *(modelDataBF -> append ());;
     
-    // First copy across the fields that were calculated in their entiry above.
+    // First copy across the fields that were calculated in their entirety above.
     row[colsDataBF.spectrum] = AllBrFracData[j].spectrum;
     row[colsDataBF.index] = AllBrFracData[j].index;
     row[colsDataBF.wavenumber] = AllBrFracData[j].wavenumber;

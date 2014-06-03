@@ -195,7 +195,7 @@ class AnalyserWindow : public Gtk::Window {
     void updateKuruczBF ();
     void loadXGremlinData ();
     void updatePlottedData (bool CalcScaleFactors = true);
-    void do_load_expt_spectrum () throw (Error);
+    int do_load_expt_spectrum ();
     void writeFileVersion (ofstream *BinOut);
     void saveExptSpectra (ofstream *BinOut);
     void saveKuruczList (ofstream *BinOut);

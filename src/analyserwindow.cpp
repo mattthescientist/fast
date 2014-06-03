@@ -329,7 +329,7 @@ void AnalyserWindow::plotLines (vector < vector <LinePair *> > PlotLines,
   for (unsigned int i = 0; i < LineBoxes.size (); i ++) {
     frameSpectrumPlots.push_back (new Gtk::Frame);
     hboxSpectrumPlots.push_back (new Gtk::HBox);
-    frameSpectrumPlots[i] -> set_label (ExptSpectra[PlotOrder[i]].name());
+    frameSpectrumPlots[i] -> set_label ("(" + ExptSpectra[PlotOrder[i]].index() + ") " + ExptSpectra[PlotOrder[i]].name());
     frameSpectrumPlots[i] -> add ((Gtk::Widget &) *hboxSpectrumPlots [i]);
     frameSpectrumPlots[i] -> show ();
     hboxSpectrumPlots[i] -> show ();

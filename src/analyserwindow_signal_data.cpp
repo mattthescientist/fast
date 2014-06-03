@@ -33,13 +33,10 @@ using namespace::std;
 // to load an associated line list.
 //
 void AnalyserWindow::loadXGremlinData () {
-  try {
-    do_load_expt_spectrum ();
-  } catch (Error *e) {
-    // A problem was encountered. Return without prompting for a line list.
-    return;
+  int rtnCode = do_load_expt_spectrum ();
+  if (rtnCode == FLT_NO_ERROR) {
+	on_data_load_line_list ();
   }
-  on_data_load_line_list ();
 }
 
 //------------------------------------------------------------------------------
@@ -152,19 +149,14 @@ void AnalyserWindow::on_data_save_kurucz () {
 // handles any residual thrown errors.
 //
 void AnalyserWindow::on_data_load_expt_spectrum () { 
-  try {
-    do_load_expt_spectrum ();
-  } catch (Error *Err) {
-    // Do nothing. The error has been handled elsewhere. This function is just
-    // a wrapper to complement AnalyserWindow::loadXGremlinData (), above.
-  }
+  do_load_expt_spectrum ();
 }
 
 
 //------------------------------------------------------------------------------
 // do_load_expt_spectrum () : Loads a user specified XGremlin spectrum
 //
-void AnalyserWindow::do_load_expt_spectrum () throw (Error) { 
+int AnalyserWindow::do_load_expt_spectrum () {
   Gtk::FileChooserDialog dialog("Select an experimental data file to load",
 		  Gtk::FILE_CHOOSER_ACTION_OPEN);
   dialog.set_transient_for(*this);
@@ -237,13 +229,14 @@ void AnalyserWindow::do_load_expt_spectrum () throw (Error) {
           treeSelection->select(row);
         }
         projectHasChanged (true);
+        return FLT_NO_ERROR;
 
         
       // If a file reading error occurs, inform the user. If another error has
       // occurred, continue to throw it.
       } catch (Error *Err) {
         display_error (Err);
-        throw Error (FLT_DIALOG_CANCEL);
+        return FLT_DIALOG_CANCEL;
       }          
       break;
     }
@@ -252,10 +245,11 @@ void AnalyserWindow::do_load_expt_spectrum () throw (Error) {
     // wish to abort loading of spectrum. Do nothing.
     default:
     {
-      throw Error (FLT_DIALOG_CANCEL);
+      return FLT_DIALOG_CANCEL;
       break;
     }
   }
+  return FLT_NO_ERROR;
 }
 
 

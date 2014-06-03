@@ -5,12 +5,12 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.base.832608748" moduleId="org.eclipse.cdt.core.settings" name="Default">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -112,9 +112,6 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="fontconfig"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gobject-2.0"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glib-2.0"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gsl"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gslcblas"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="m"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gtkmm-2.4"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="atkmm-1.6"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gdkmm-2.4"/>
@@ -136,6 +133,9 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="fontconfig"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gobject-2.0"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glib-2.0"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gsl"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gslcblas"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="m"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1203115087" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
