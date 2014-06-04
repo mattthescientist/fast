@@ -557,8 +557,8 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
                   / (OrderedPairs [j][i]->xgLine->eqwidth ()
                   / ExptSpectra[SpectrumOrder[j]].response (OrderedPairs[j][i]->xgLine->wavenumber ()));
                 
-                cout << "[" << k << "][" << i << "]: " << OrderedPairs [k][i]->xgLine->wavenumber ()<< "  " << OrderedPairs [k][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[k]].response (OrderedPairs[k][i]->xgLine->wavenumber ()) << flush;
-                cout << "    [" << j << "][" << i << "]: " << OrderedPairs [j][i]->xgLine->wavenumber () << "  " << OrderedPairs [j][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[j]].response (OrderedPairs[j][i]->xgLine->wavenumber ()) << endl;
+//                cout << "[" << k << "][" << i << "]: " << OrderedPairs [k][i]->xgLine->wavenumber ()<< "  " << OrderedPairs [k][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[k]].response (OrderedPairs[k][i]->xgLine->wavenumber ()) << flush;
+//                cout << "    [" << j << "][" << i << "]: " << OrderedPairs [j][i]->xgLine->wavenumber () << "  " << OrderedPairs [j][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[j]].response (OrderedPairs[j][i]->xgLine->wavenumber ()) << endl;
                 if (Options.correct_snr ()) {
                   SNRa = OrderedPairs [k][i]->xgLine->snr () / OrderedPairs [k][i]->xgLine->noise();
                   SNRb = OrderedPairs [j][i]->xgLine->snr () / OrderedPairs [j][i]->xgLine->noise();
