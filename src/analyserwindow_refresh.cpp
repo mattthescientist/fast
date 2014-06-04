@@ -611,6 +611,9 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
 // updatePlottedData () : 
 //
 void AnalyserWindow::updatePlottedData (bool CalcScaleFactors) {
+  ostringstream oss;
+  oss.precision (2);
+  oss << fixed;
   // Check the current selection is valid. Only proceed if it is.
   Glib::RefPtr<Gtk::TreeSelection> treeSelection = treeLevelsBF.get_selection();
   if (treeSelection) {
@@ -638,10 +641,15 @@ void AnalyserWindow::updatePlottedData (bool CalcScaleFactors) {
             break;
           }
         }
+
         SpectrumLabels.push_back (ExptSpectra [RefIndex].index());
         SpectrumOrder.push_back (RefIndex);
         for (unsigned int i = 0; i < LevelLines[Level][RefIndex].size (); i ++){
           NextPairSet.push_back (&LevelLines[Level][RefIndex][i]);
+          oss << "C=" << ExptSpectra [RefIndex].response (LevelLines[Level][RefIndex][i].xgLine->wavenumber ());
+          LevelLines[Level][RefIndex][i].plot -> clearText ();
+          LevelLines[Level][RefIndex][i].plot -> addText (45, 15, oss.str ());
+		  oss.str ("");
         }
         OrderedPairs.push_back (NextPairSet);
 
@@ -651,6 +659,10 @@ void AnalyserWindow::updatePlottedData (bool CalcScaleFactors) {
           if (i != RefIndex) {
             for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
               NextPairSet.push_back (&LevelLines[Level][i][j]);
+              oss << "C=" << ExptSpectra [i].response (LevelLines[Level][i][j].xgLine->wavenumber ());
+              LevelLines[Level][i][j].plot -> clearText ();
+              LevelLines[Level][i][j].plot -> addText (45, 15, oss.str ());
+              oss.str ("");
             }
             SpectrumLabels.push_back (ExptSpectra [i].index());
             SpectrumOrder.push_back (i);

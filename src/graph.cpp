@@ -104,6 +104,7 @@ bool Graph::on_expose_event(GdkEventExpose* event)
       }
       cr->stroke ();
     }
+    drawText (cr, height, width);
   }
   
   return true;
@@ -259,6 +260,20 @@ void Graph::drawYTicMarks (Cairo::RefPtr<Cairo::Context> cr,
 }
 
 
+void Graph::drawText (Cairo::RefPtr<Cairo::Context> cr,
+		  const int height, const int width) {
+	Glib::RefPtr<Pango::Context> lc = create_pango_context();
+	Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (lc);
+	ostringstream oss;
+	oss << "normal " << FONT_SIZE;
+	layout -> set_font_description(Pango::FontDescription (oss.str().c_str()));
+	for (unsigned int i = 0; i < Labels.size (); i ++) {
+		layout -> set_text (Labels[i].text);
+		get_window () -> draw_layout(get_style() -> get_text_gc(Gtk::STATE_NORMAL), Labels[i].x, Labels[i].y, layout);
+	}
+}
+
+
 //==============================================================================
 // GENERAL CLASS METHODS
 //==============================================================================
@@ -345,6 +360,15 @@ void Graph::addPlot (vector <Coord> NewPlot, bool IncludeInMinima,
   LineWidths.push_back (DEF_PLOT_WIDTH);
   LineColours.push_back (GraphColour (DEF_PLOT_COLOUR));
   setAutoLimits ();
+}
+
+
+void Graph::addText (double x, double y, string textIn) {
+	Label newLabel;
+	newLabel.x = x;
+	newLabel.y = y;
+	newLabel.text = textIn;
+	Labels.push_back (newLabel);
 }
 
 

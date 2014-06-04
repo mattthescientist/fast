@@ -343,10 +343,15 @@ void AnalyserWindow::plotLines (vector < vector <LinePair *> > PlotLines,
 void AnalyserWindow::generatePlots (vector < vector <LinePair *> > PlotLines) {
   vector <LineData *> Plots;
   for (unsigned int i = 0; i < PlotLines.size (); i ++) {
-    for (unsigned int j = 0; j < PlotLines[i].size (); j ++) {
-      Plots.push_back (PlotLines[i][j]->plot);
-      Plots[j] -> show ();
-    }
+	for (unsigned int j = 0; j < PlotLines[i].size (); j ++) {
+	  if (PlotLines[i][j]->xgLineLineIndex != -1) {
+		for (unsigned int j = 0; j < PlotLines[i].size (); j ++) {
+		  Plots.push_back (PlotLines[i][j]->plot);
+		  Plots[j] -> show ();
+		}
+		break;
+	  }
+	}
     LineBoxes.push_back (Plots);
     Plots.clear ();
   }
@@ -365,6 +370,7 @@ void AnalyserWindow::addNewLines (XgSpectrum *Spectrum, vector <XgLine> NewLines
   vector <LineData *> Plots;
   Coord NextPoint;
   double ResidualRMS;
+  ostringstream oss;
 
   // Create a plot for each object
   for (unsigned int i = 0; i < NewLines.size (); i ++) {

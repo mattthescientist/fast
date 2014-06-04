@@ -80,6 +80,8 @@ class LineData : public XgLine, public Gtk::EventBox {
     void setLine (XgLine a) { Ready = false; XgLine::operator= (a); }
     void addPlot (XgLine l, vector<Coord> a, bool mi = true, bool ma = true) { Plot -> addPlot (l, a, mi, ma); }
     void addPlot (vector<Coord> a, bool mi = true, bool ma = true) { Plot -> addPlot (a, mi, ma); }
+    void addText (double x, double y, string textIn) { Plot -> addText (x, y, textIn); }
+    void clearText () { Plot -> clearText (); }
     void setPlotColour (int i, float r, float g, float b) { Plot -> setColour (i, r, g, b); }
     void setPlotWidth (int i, float w) { Plot -> setWidth (i, w); }
     void addResidual (vector<Coord> a) { Residual -> addPlot (a); }

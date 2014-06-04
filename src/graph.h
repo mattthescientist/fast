@@ -82,6 +82,15 @@ typedef struct td_coord {
   
 } Coord;
 
+typedef struct td_label {
+	double x;
+	double y;
+	string text;
+
+	td_label () { x = 0.0; y = 0.0; text = ""; }
+	td_label (double nx, double ny, double textIn) { x = nx; y = ny; text = textIn; }
+} Label;
+
 typedef struct graph_colour {
   float r, g, b;
   
@@ -101,12 +110,14 @@ private:
   vector <GraphColour> LineColours;
   Coord GraphMin, GraphMax;
   string XLabel, YLabel;
+  vector <Label> Labels;
   bool Selected;    // true if the graph is currently selected
   bool Disabled;    // true if the graph is currently disabled
   bool AutoLimits;  // true if limits were last set by setAutoLimits()
   
   void drawXTicMarks (Cairo::RefPtr<Cairo::Context> cr, const int height, const int width);
   void drawYTicMarks (Cairo::RefPtr<Cairo::Context> cr, const int height, const int width);
+  void drawText (Cairo::RefPtr<Cairo::Context> cr, const int height, const int width);
 
 protected:
   
@@ -121,6 +132,8 @@ public:
     bool IncludeInMinima = true, bool IncludeInMaxima = true);
   void addPlot (vector <Coord> NewPlot, bool IncludeInMinima = true, 
     bool IncludeInMaxima = true);
+  void addText (double x, double y, string textIn);
+  void clearText () { Labels.clear(); }
   void max (Coord NewMax) { GraphMax = NewMax; AutoLimits = false; }
   void min (Coord NewMin) { GraphMin = NewMin; AutoLimits = false; }
   Coord max () { return GraphMax; }
