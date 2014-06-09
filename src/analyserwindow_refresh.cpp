@@ -494,7 +494,7 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
       for (unsigned int j = 1; j < OrderedPairs.size (); j ++) {
         if (j > k) {
         
-          // Add a new row to the comparison list and initalise it
+          // Add a new row to the comparison list and initialise it
           if (!NoAppend) {
             parentRow = *(modelDataComp -> append ());
           }
@@ -503,7 +503,7 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
           AveError = 0.0;
           RatioDenom = 0.0;
           LinkFound = false;
-          // First check to see if the specta have been explicitly linked together by the user.
+          // First check to see if the spectra have been explicitly linked together by the user.
           // In such cases ALL lines common to both spectra may be used to calculate the transfer
           // ratio rather than only the lines belonging to the current upper level.
           for (unsigned int i = 0; i < LinkedSpectra.size (); i ++) {
@@ -634,41 +634,57 @@ void AnalyserWindow::updatePlottedData (bool CalcScaleFactors) {
         vector <unsigned int> SpectrumOrder;
         unsigned int RefIndex = 0;
         
-        // Find the reference spectrum. This will be plotted first.
+        // Find the reference spectrum. This will be plotted first. Add it's details to the beginning of the
+        // SpectrumLabels and SpectrumOrder vectors so that it is always referenced first.
         for (unsigned int i = 0; i < ExptSpectra.size (); i ++) {
           if (ExptSpectra[i].isReference()) {
             RefIndex = i;
             break;
           }
         }
-
         SpectrumLabels.push_back (ExptSpectra [RefIndex].index());
         SpectrumOrder.push_back (RefIndex);
+
+        // Now copy all of the lines belonging to the currently selected level in the reference spectrum to
+        // NextPairSet.
         for (unsigned int i = 0; i < LevelLines[Level][RefIndex].size (); i ++){
+          // Create NextPairSet from the LevelLines matrix
           NextPairSet.push_back (&LevelLines[Level][RefIndex][i]);
+
+          // Add a note to the plot to say what the response function value is at the wavenumber of the
+          // current line. This will be a number between 0 and 1.
           oss << "C=" << ExptSpectra [RefIndex].response (LevelLines[Level][RefIndex][i].xgLine->wavenumber ());
           LevelLines[Level][RefIndex][i].plot -> clearText ();
           LevelLines[Level][RefIndex][i].plot -> addText (45, 15, oss.str ());
 		  oss.str ("");
         }
+
+		// Finally, add NextPairSet to OrderedPairs for future use.
         OrderedPairs.push_back (NextPairSet);
 
-        // Now add the lines from all the other spectra to OrderedPairs
+        // Now repeat the above steps to add the lines from all the other spectra to OrderedPairs
         for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
           NextPairSet.clear ();
           if (i != RefIndex) {
             for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
+              // Create NextPairSet from the LevelLines matrix
               NextPairSet.push_back (&LevelLines[Level][i][j]);
+
+			  // Add a note to the plot to say what the response function value is at the wavenumber of the
+			  // current line. This will be a number between 0 and 1.
               oss << "C=" << ExptSpectra [i].response (LevelLines[Level][i][j].xgLine->wavenumber ());
               LevelLines[Level][i][j].plot -> clearText ();
               LevelLines[Level][i][j].plot -> addText (45, 15, oss.str ());
               oss.str ("");
             }
+
+            // Add the details for the current spectrum to the end of the SpectrumLabels, SpectrumOrder and OrderedPairs vectors.
             SpectrumLabels.push_back (ExptSpectra [i].index());
             SpectrumOrder.push_back (i);
             OrderedPairs.push_back (NextPairSet);
           }
         }
+
         plotLines (OrderedPairs, SpectrumOrder);
         if (CalcScaleFactors) {
           ScalingFactors = updateComparisonList (OrderedPairs, SpectrumLabels, SpectrumOrder);

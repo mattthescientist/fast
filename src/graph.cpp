@@ -31,7 +31,6 @@ Graph::Graph () {
   GraphMax.x = 0.0; GraphMax.y = 0.0;
   Selected = false;
   Disabled = false;
-  Calibration = false;
   AutoLimits = false;
 }
 
@@ -41,7 +40,6 @@ Graph::Graph (XgLine LineIn, vector <Coord> Points) {
   GraphMax.x = 0.0; GraphMax.y = 0.0;
   Selected = false;
   Disabled = false;
-  Calibration = false;
   AutoLimits = false;
   addPlot (LineIn, Points);
 }
@@ -80,11 +78,9 @@ bool Graph::on_expose_event(GdkEventExpose* event)
       width - TOTAL_X_PAD, height - TOTAL_Y_PAD);
     if (Selected) {
       if (Disabled) cr -> set_source_rgb(COLOUR_DIS_SEL);
-      if (Calibration) cr -> set_source_rgb(COLOUR_SEL_CAL);
       else cr -> set_source_rgb(COLOUR_SELECTED);
     } else {
       if (Disabled) cr -> set_source_rgb(COLOUR_DISABLED);
-      if (Calibration) cr -> set_source_rgb(COLOUR_SELECTED);
       else cr -> set_source_rgb(COLOUR_BACK);
     }
     cr->fill_preserve ();

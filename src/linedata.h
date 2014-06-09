@@ -91,8 +91,8 @@ class LineData : public XgLine, public Gtk::EventBox {
     void plotLimits (GraphLimits NewLimits);
     void resLimits (GraphLimits NewLimits); 
     bool selected () { return Selected; }
-    void selected (bool a) { Selected = a; Plot->select(a); Residual->select(a);}
-    void disabled (bool a) { Selected = false; Disabled=a; Plot->disable(a); Residual->disable(a);}
+    void selected (bool a) { Selected = a; Plot->select(a); Residual->select(a); }
+    void disabled (bool a) { Selected = false; Disabled=a; Plot->disable(a); Residual->disable(a); }
     bool disabled () { return Disabled; }
     bool autoLimits () { return Plot -> autoLimits (); }
     void setAutoLimits () { Plot -> setAutoLimits (); }

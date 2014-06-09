@@ -41,7 +41,6 @@ using namespace::std;
 #define COLOUR_BACK      1.0, 1.0, 1.0  /* White       */
 #define COLOUR_DISABLED  0.6, 0.6, 0.6  /* Medium grey */
 #define COLOUR_DIS_SEL   0.8, 0.8, 0.8  /* Light grey  */
-#define COLOUR_SEL_CAL   0.5, 0.5, 1.0  /* Medium blue */
 
 // Graph dimension definitions
 #define ZOOM_FACTOR      0.8
@@ -115,7 +114,6 @@ private:
   bool Selected;    // true if the graph is currently selected
   bool Disabled;    // true if the graph is currently disabled
   bool AutoLimits;  // true if limits were last set by setAutoLimits()
-  bool Calibration; // true if the line plotted in this graph is being used for intensity calibration of other lines
   
   void drawXTicMarks (Cairo::RefPtr<Cairo::Context> cr, const int height, const int width);
   void drawYTicMarks (Cairo::RefPtr<Cairo::Context> cr, const int height, const int width);
@@ -142,7 +140,6 @@ public:
   Coord min () { return GraphMin; }
   void select (bool a) { Selected = a; queue_draw (); }
   void disable (bool a) { Selected = false; Disabled = a; queue_draw (); }
-  void calibration (bool a) { Calibration = a; queue_draw (); }
   void setWidth (int Index, float nWidth);
   void setColour (int Index, float nr, float ng, float nb);
   void setAutoLimits ();
