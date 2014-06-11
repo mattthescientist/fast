@@ -43,6 +43,7 @@ LineData::~LineData () {
 void LineData::doConstructor () {
   Selected = false;
   Disabled = false;
+  Hidden = false;
   Ready = false;
   ShowData = false;
   Plot = new Graph;
@@ -80,12 +81,30 @@ void LineData::doConstructor () {
   signal_button_press_event().connect(sigc::mem_fun(*this,
               &LineData::on_button_press_event));
   
+  // Construct the popup menus for a right click on a line profile
+  {
+	Gtk::Menu::MenuList& menulist = menuPlotDisablePopup.items();
+	menulist.push_back(Gtk::Menu_Helpers::MenuElem("Disable Line",
+	sigc::mem_fun(*this, &LineData::on_popup_disable_line)));
+	menulist.push_back(Gtk::Menu_Helpers::MenuElem("Hide Line",
+	sigc::mem_fun(*this, &LineData::on_popup_hide_line)));
+  }
+  {
+	Gtk::Menu::MenuList& menulist = menuPlotEnablePopup.items();
+	menulist.push_back(Gtk::Menu_Helpers::MenuElem("Enable Line",
+	sigc::mem_fun(*this, &LineData::on_popup_enable_line)));
+	menulist.push_back(Gtk::Menu_Helpers::MenuElem("Delete Line",
+	sigc::mem_fun(*this, &LineData::on_popup_hide_line)));
+  }
+
 }
 
 bool LineData::on_expose_event(GdkEventExpose* event) { 
   if (!Ready) prepareData (); 
   Plot -> select (Selected);
   Residual -> select (Selected);
+  Plot -> disable (Disabled);
+  Residual -> disable (Disabled);
 
   Gtk::EventBox::on_expose_event(event);
   return true;
@@ -128,11 +147,24 @@ void LineData::prepareData () {
 }
 
 bool LineData::on_button_press_event(GdkEventButton* event) {
-  Selected = !Selected;
-  Plot -> select (Selected);
-  Residual -> select (Selected);
-  m_signal_selected.emit(Selected);
-  return true;
+	if (!Hidden && Plot -> numPlots() > 0) {
+		if ((event->type == GDK_BUTTON_PRESS)) {
+			if (event->button == 1 && !Disabled) {
+				Selected = !Selected;
+				Plot -> select (Selected);
+				Residual -> select (Selected);
+				m_signal_selected.emit(Selected);
+			}
+			else if (event->button == 3) {
+				if (Disabled) {
+					menuPlotEnablePopup.popup(event->button, event->time);
+				} else {
+					menuPlotDisablePopup.popup(event->button, event->time);
+				}
+			}
+		}
+	}
+	return true;
 }
 
 GraphLimits LineData::plotLimits () {
@@ -162,4 +194,50 @@ void LineData::resLimits (GraphLimits lim) {
 }
     
     
+//------------------------------------------------------------------------------
+// on_popup_enable_line () : Called when the user right clicks on a DISABLED
+// line profile in the line plot area and chooses to reactive the line.
+//
+void LineData::on_popup_enable_line ()
+{
+	Disabled = false;
+	Plot -> disable (false);
+	Residual -> disable (false);
+	m_signal_disabled.emit(false);
+}
 
+
+//------------------------------------------------------------------------------
+// on_popup_disable_line () : Called when the user right clicks on an ENABLED
+// line profile in the line plot area and chooses to deactivate the line.
+//
+void LineData::on_popup_disable_line ()
+{
+	Disabled = true;
+	Plot -> disable (true);
+	Residual -> disable (true);
+	Selected = false;
+	Plot -> select (false);
+	Residual -> select (false);
+	m_signal_disabled.emit(true);
+}
+
+//------------------------------------------------------------------------------
+// on_popup_delete_line () : Called when the user right clicks on any line
+// profile in the line plot area and chooses to delete the line profile.
+//
+void LineData::on_popup_hide_line ()
+{
+	Gtk::MessageDialog confirm("Are you sure you wish to hide this line?",
+	  false, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_NONE);
+	confirm.add_button ("Yes", Gtk::RESPONSE_YES);
+	confirm.add_button ("No", Gtk::RESPONSE_NO);
+	confirm.set_default_response(Gtk::RESPONSE_NO);
+	int Result = confirm.run ();
+	if (Result == Gtk::RESPONSE_YES) {
+		Hidden = true;
+		Plot -> hide (true);
+		Residual -> hide (true);
+		m_signal_hidden.emit();
+	}
+}

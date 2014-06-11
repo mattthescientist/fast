@@ -66,11 +66,6 @@ void AnalyserWindow::updateKuruczBF () {
   // Cycle through each of the upper levels listed in treeLevels and extract the
   // lines belonging to it from KuruczList. Pair these up with corresponding
   // XGremlin lines for each loaded spectrum using getLinePairs.
-
-  
-  
-  
-  
   children = levelTreeModel -> children();
   for (type_children::iterator iter = children.begin(); iter != children.end(); ++iter) {
     Level = (*iter)[levelCols.index];
@@ -192,7 +187,7 @@ void AnalyserWindow::updateXGremlinList (
   for (unsigned int i = 0; i < OrderedPairs[0].size (); i ++) {
     LineFound = false;
     for (unsigned int j = 0; j < OrderedPairs.size (); j ++) {
-      if (OrderedPairs[j][i] -> xgLine->wavenumber () > 0.0) {
+      if (OrderedPairs[j][i] -> xgLine->wavenumber () > 0.0 && !OrderedPairs[j][i]->plot->hidden()) {
         if (!LineFound) {
           parentRow = *(modelDataXGr -> append ());
           row = parentRow;
@@ -235,11 +230,6 @@ void AnalyserWindow::updateXGremlinList (
           / ExptSpectra[SpectrumOrder[j]].response 
             (OrderedPairs[j][i]->xgLine->wavenumber ())
           * BestScalingFactor.Ratio;
-          
-/*        cout << "    [" << j << "][" << i << "]: " << OrderedPairs [j][i]->xgLine->eqwidth () 
-          << " / " << ExptSpectra[SpectrumOrder[j]].response (OrderedPairs[j][i]->xgLine->wavenumber ()) 
-          << " * " << BestScalingFactor.Ratio << endl;*/
-          
         row[colsDataXGr.epstot] = OrderedPairs[j][i]->xgLine->epstot ();
         row[colsDataXGr.epsevn] = OrderedPairs[j][i]->xgLine->epsevn ();
         row[colsDataXGr.epsodd] = OrderedPairs[j][i]->xgLine->epsodd ();
@@ -542,8 +532,8 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
             NumLinesCompared = 0;
             // Compare matching lines in each of the two spectra
             for (unsigned int i = 0; i < OrderedPairs[k].size (); i ++) {
-              if (OrderedPairs[k][i]->xgLine->wavenumber () > 0.0
-                && OrderedPairs[j][i]->xgLine->wavenumber () > 0.0) {
+              if (OrderedPairs[k][i]->xgLine->wavenumber () > 0.0 && !OrderedPairs[k][i]->plot->disabled()
+                && OrderedPairs[j][i]->xgLine->wavenumber () > 0.0 && !OrderedPairs[j][i]->plot->disabled()) {
                 
                 // Add a new child row for the comparison of individual lines and
                 // fill it with the required information
@@ -557,8 +547,6 @@ vector <RatioAndError> AnalyserWindow::updateComparisonList (vector < vector <Li
                   / (OrderedPairs [j][i]->xgLine->eqwidth ()
                   / ExptSpectra[SpectrumOrder[j]].response (OrderedPairs[j][i]->xgLine->wavenumber ()));
                 
-//                cout << "[" << k << "][" << i << "]: " << OrderedPairs [k][i]->xgLine->wavenumber ()<< "  " << OrderedPairs [k][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[k]].response (OrderedPairs[k][i]->xgLine->wavenumber ()) << flush;
-//                cout << "    [" << j << "][" << i << "]: " << OrderedPairs [j][i]->xgLine->wavenumber () << "  " << OrderedPairs [j][i]->xgLine->eqwidth () << " / " << ExptSpectra[SpectrumOrder[j]].response (OrderedPairs[j][i]->xgLine->wavenumber ()) << endl;
                 if (Options.correct_snr ()) {
                   SNRa = OrderedPairs [k][i]->xgLine->snr () / OrderedPairs [k][i]->xgLine->noise();
                   SNRb = OrderedPairs [j][i]->xgLine->snr () / OrderedPairs [j][i]->xgLine->noise();
@@ -632,8 +620,22 @@ void AnalyserWindow::updatePlottedData (bool CalcScaleFactors) {
         vector <LinePair *> NextPairSet;
         vector <string> SpectrumLabels;
         vector <unsigned int> SpectrumOrder;
+        vector <unsigned int> LinesToPlot;
         unsigned int RefIndex = 0;
         
+
+        // Look at each line in turn and see if it is plotted in at least one spectrum.
+		// If so, add its index to LinesToPlot. This is effectively scanning through each
+		// COLUMN in the line profile plot area to make sure something is visible.
+		for (unsigned int j = 0; j < LevelLines[Level][0].size (); j ++) {
+			for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
+				if (LevelLines[Level][i][j].xgLineLineIndex != -1 && !LevelLines[Level][i][j].plot->hidden()) {
+					LinesToPlot.push_back (j);
+					break;
+				}
+			}
+		}
+
         // Find the reference spectrum. This will be plotted first. Add it's details to the beginning of the
         // SpectrumLabels and SpectrumOrder vectors so that it is always referenced first.
         for (unsigned int i = 0; i < ExptSpectra.size (); i ++) {
@@ -647,15 +649,15 @@ void AnalyserWindow::updatePlottedData (bool CalcScaleFactors) {
 
         // Now copy all of the lines belonging to the currently selected level in the reference spectrum to
         // NextPairSet.
-        for (unsigned int i = 0; i < LevelLines[Level][RefIndex].size (); i ++){
+        for (unsigned int i = 0; i < LinesToPlot.size (); i ++){
           // Create NextPairSet from the LevelLines matrix
-          NextPairSet.push_back (&LevelLines[Level][RefIndex][i]);
+          NextPairSet.push_back (&LevelLines[Level][RefIndex][LinesToPlot[i]]);
 
           // Add a note to the plot to say what the response function value is at the wavenumber of the
           // current line. This will be a number between 0 and 1.
-          oss << "C=" << ExptSpectra [RefIndex].response (LevelLines[Level][RefIndex][i].xgLine->wavenumber ());
-          LevelLines[Level][RefIndex][i].plot -> clearText ();
-          LevelLines[Level][RefIndex][i].plot -> addText (45, 15, oss.str ());
+          oss << "C=" << ExptSpectra [RefIndex].response (LevelLines[Level][RefIndex][LinesToPlot[i]].xgLine->wavenumber ());
+          LevelLines[Level][RefIndex][LinesToPlot[i]].plot -> clearText ();
+          LevelLines[Level][RefIndex][LinesToPlot[i]].plot -> addText (45, 15, oss.str ());
 		  oss.str ("");
         }
 
@@ -666,15 +668,15 @@ void AnalyserWindow::updatePlottedData (bool CalcScaleFactors) {
         for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
           NextPairSet.clear ();
           if (i != RefIndex) {
-            for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
+            for (unsigned int j = 0; j < LinesToPlot.size (); j ++) {
               // Create NextPairSet from the LevelLines matrix
-              NextPairSet.push_back (&LevelLines[Level][i][j]);
+              NextPairSet.push_back (&LevelLines[Level][i][LinesToPlot[j]]);
 
 			  // Add a note to the plot to say what the response function value is at the wavenumber of the
 			  // current line. This will be a number between 0 and 1.
-              oss << "C=" << ExptSpectra [i].response (LevelLines[Level][i][j].xgLine->wavenumber ());
-              LevelLines[Level][i][j].plot -> clearText ();
-              LevelLines[Level][i][j].plot -> addText (45, 15, oss.str ());
+              oss << "C=" << ExptSpectra [i].response (LevelLines[Level][i][LinesToPlot[j]].xgLine->wavenumber ());
+              LevelLines[Level][i][LinesToPlot[j]].plot -> clearText ();
+              LevelLines[Level][i][LinesToPlot[j]].plot -> addText (45, 15, oss.str ());
               oss.str ("");
             }
 
@@ -688,9 +690,6 @@ void AnalyserWindow::updatePlottedData (bool CalcScaleFactors) {
         plotLines (OrderedPairs, SpectrumOrder);
         if (CalcScaleFactors) {
           ScalingFactors = updateComparisonList (OrderedPairs, SpectrumLabels, SpectrumOrder);
-//          for (unsigned int i = 0; i < ScalingFactors.size (); i ++) {
-//            cout << "[" << i << "] " << ScalingFactors[i].Ratio << endl;
-//          }
         }
         updateXGremlinList (OrderedPairs, SpectrumLabels, SpectrumOrder);
         updateBranchingFractions (OrderedPairs, SpectrumLabels, SpectrumOrder);
@@ -808,7 +807,7 @@ void AnalyserWindow::addToSpectraList (XgSpectrum NewSpectrum,
   int Index, bool Ref = false, bool Select = true) 
 {
 
-  // Add a new row to the spectra list and fills in basic spectrum infomation
+  // Add a new row to the spectra list and fills in basic spectrum information
   Gtk::TreeModel::Row parentRow = *(m_refTreeModel->append());
   parentRow[m_Columns.name] = NewSpectrum.name();
   parentRow[m_Columns.emin] = int(NewSpectrum.data()[0].x + 0.5);

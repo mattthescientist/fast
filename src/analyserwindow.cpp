@@ -124,7 +124,7 @@ void AnalyserWindow::scaleGraphs () {
 // Generate a Voigt profile for the current line. w[0] contains the Gaussian 
 // component of the Voigt profile width, and w[1] the Lorentzian component.
 // These are extracted from the XGremlin writelines data by using the "width"
-// and "dmp" colummn, where the latter is the fraction of the Voigt profile
+// and "dmp" column, where the latter is the fraction of the Voigt profile
 // width that arises from the Lorentzian. Don't forget that the writelines
 // widths are in mK.
 //
@@ -340,17 +340,34 @@ void AnalyserWindow::plotLines (vector < vector <LinePair *> > PlotLines,
   }
 }
 
+
+// ------------------------------------------------------------------------------
+// generatePlots (vector < vector <LinePair *> >) :
+//
 void AnalyserWindow::generatePlots (vector < vector <LinePair *> > PlotLines) {
   vector <LineData *> Plots;
+  vector <bool> PlotSpectrum;
+
+  // Look at each spectrum in turn and see if it contains at least one line to
+  // be plotted. If so, add its index to SpectraToPlot. This is effectively scanning
+  // through each ROW in the line profile plot area to make sure something is visible.
+  PlotSpectrum.resize(PlotLines.size (), false);
   for (unsigned int i = 0; i < PlotLines.size (); i ++) {
-	for (unsigned int j = 0; j < PlotLines[i].size (); j ++) {
-	  if (PlotLines[i][j]->xgLineLineIndex != -1) {
+  	for (unsigned int j = 0; j < PlotLines[i].size (); j ++) {
+  		if (PlotLines[i][j]->xgLineLineIndex != -1 && !PlotLines[i][j]->plot->hidden()) {
+  			PlotSpectrum[i] = true;
+  			break;
+  		}
+  	}
+  }
+
+  // Now produce a rectangular grid of line profile plots with empty rows removed.
+  for (unsigned int i = 0; i < PlotLines.size (); i ++) {
+	if (PlotSpectrum[i]) {
 		for (unsigned int j = 0; j < PlotLines[i].size (); j ++) {
 		  Plots.push_back (PlotLines[i][j]->plot);
 		  Plots[j] -> show ();
 		}
-		break;
-	  }
 	}
     LineBoxes.push_back (Plots);
     Plots.clear ();
@@ -375,8 +392,9 @@ void AnalyserWindow::addNewLines (XgSpectrum *Spectrum, vector <XgLine> NewLines
   // Create a plot for each object
   for (unsigned int i = 0; i < NewLines.size (); i ++) {
     Plots.push_back (new LineData (NewLines[i]));
-    Plots[i]->signal_selected().connect
-      (sigc::mem_fun(*this, &AnalyserWindow::on_click_plot));
+    Plots[i]->signal_selected().connect (sigc::mem_fun(*this, &AnalyserWindow::on_click_plot));
+    Plots[i]->signal_disabled().connect (sigc::mem_fun(*this, &AnalyserWindow::on_popup_disable_line));
+    Plots[i]->signal_hidden().connect (sigc::mem_fun(*this, &AnalyserWindow::on_popup_hide_line));
     
     Plots[i] -> showParams (ViewLineParams);
     Plots[i] -> addPlot (Spectrum -> data(NewLines[i].wavenumber(),

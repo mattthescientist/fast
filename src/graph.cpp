@@ -31,6 +31,7 @@ Graph::Graph () {
   GraphMax.x = 0.0; GraphMax.y = 0.0;
   Selected = false;
   Disabled = false;
+  Hidden = false;
   AutoLimits = false;
 }
 
@@ -40,6 +41,7 @@ Graph::Graph (XgLine LineIn, vector <Coord> Points) {
   GraphMax.x = 0.0; GraphMax.y = 0.0;
   Selected = false;
   Disabled = false;
+  Hidden = false;
   AutoLimits = false;
   addPlot (LineIn, Points);
 }
@@ -62,7 +64,7 @@ bool Graph::on_expose_event(GdkEventExpose* event)
 {
   // This is where we draw on the window
   Glib::RefPtr<Gdk::Window> window = get_window();
-  if (window && Plots.size () > 0) {
+  if (window && Plots.size () > 0 && !Hidden) {
     Gtk::Allocation allocation = get_allocation();
     const int width = allocation.get_width();
     const int height = allocation.get_height();

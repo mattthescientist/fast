@@ -302,3 +302,25 @@ void AnalyserWindow::on_popup_remove_level()
   }
 }
 
+
+//------------------------------------------------------------------------------
+// on_popup_disable_line () : Called when the user right clicks on a line
+// profile in the line plot area and chooses to enable or disable the line.
+//
+void AnalyserWindow::on_popup_disable_line (bool Disable)
+{
+	updatePlottedData (true);
+	updateKuruczCompleteness ();
+	projectHasChanged (true);
+}
+
+//------------------------------------------------------------------------------
+// on_popup_delete_line () : Called when the user right clicks on any line
+// profile in the line plot area and chooses to delete the line profile.
+//
+void AnalyserWindow::on_popup_hide_line ()
+{
+	updatePlottedData (true);
+	updateKuruczCompleteness ();
+	projectHasChanged (true);
+}

@@ -113,6 +113,7 @@ private:
   vector <Label> Labels;
   bool Selected;    // true if the graph is currently selected
   bool Disabled;    // true if the graph is currently disabled
+  bool Hidden;		// true if the graph is currently hidden from view
   bool AutoLimits;  // true if limits were last set by setAutoLimits()
   
   void drawXTicMarks (Cairo::RefPtr<Cairo::Context> cr, const int height, const int width);
@@ -140,10 +141,12 @@ public:
   Coord min () { return GraphMin; }
   void select (bool a) { Selected = a; queue_draw (); }
   void disable (bool a) { Selected = false; Disabled = a; queue_draw (); }
+  void hide (bool a) { Hidden = a; queue_draw (); }
   void setWidth (int Index, float nWidth);
   void setColour (int Index, float nr, float ng, float nb);
   void setAutoLimits ();
   bool autoLimits () { return AutoLimits; }
+  int numPlots () { return Plots.size (); }
   vector <Coord> getPlotData (int i) throw (int);
 };
 

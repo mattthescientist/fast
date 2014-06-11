@@ -34,6 +34,7 @@
 #include <gtkmm/treeview.h>
 #include <gtkmm/treestore.h>
 #include <sigc++/sigc++.h>
+#include <gtkmm/messagedialog.h>
 
 #include <string>
 #include <iomanip>
@@ -90,10 +91,12 @@ class LineData : public XgLine, public Gtk::EventBox {
     GraphLimits resLimits (); 
     void plotLimits (GraphLimits NewLimits);
     void resLimits (GraphLimits NewLimits); 
-    bool selected () { return Selected; }
+    bool selected () { if (Hidden) return false; else return Selected; }
+    bool disabled () { if (Hidden) return true; else return Disabled; }
+    bool hidden () { return Hidden; }
     void selected (bool a) { Selected = a; Plot->select(a); Residual->select(a); }
     void disabled (bool a) { Selected = false; Disabled=a; Plot->disable(a); Residual->disable(a); }
-    bool disabled () { return Disabled; }
+    void hidden (bool a) { Hidden = a; Plot->hide(a); Residual->hide(a); }
     bool autoLimits () { return Plot -> autoLimits (); }
     void setAutoLimits () { Plot -> setAutoLimits (); }
     vector <Coord> getPlotData (int i) { return Plot -> getPlotData (i); }
@@ -101,8 +104,15 @@ class LineData : public XgLine, public Gtk::EventBox {
     bool showParams () { return ShowData; }
     void showParams (bool Show) { ShowData = Show; Ready = false; }
     
-    typedef sigc::signal<void, bool> type_signal_selected;
-    type_signal_selected signal_selected() { return m_signal_selected; }
+    // Create some signals that can be emitted when the user interacts with the plot object.
+    // 1) A signal to be emitted when a line profile is selected or de-selected.
+    // 2) A signal to be emitted when the user disables and enables a line profile.
+    // 3) A signal to be emitted when the user deletes a line profile.
+    typedef sigc::signal<void, bool> type_signal_emit_bool;
+    typedef sigc::signal<void> type_signal_emit_void;
+    type_signal_emit_bool signal_selected() { return m_signal_selected; }
+    type_signal_emit_bool signal_disabled() { return m_signal_disabled; }
+    type_signal_emit_void signal_hidden() { return m_signal_hidden; }
        
   protected:
     virtual bool on_expose_event(GdkEventExpose* event);
@@ -116,10 +126,16 @@ class LineData : public XgLine, public Gtk::EventBox {
 
     ModelColumns m_Columns;
 
-    type_signal_selected m_signal_selected;
+    type_signal_emit_bool m_signal_selected;
+    type_signal_emit_bool m_signal_disabled;
+    type_signal_emit_void m_signal_hidden;
       
   private:
-    bool Ready, ShowData;
+    bool Ready;			// True once the line textual data has been created with prepareData()
+    bool ShowData;		// True if the line textual data is to be shown
+    bool Selected;		// True if the line has been selected by the user
+    bool Disabled;		// True if the line has been disabled by the user
+    bool Hidden;		// True if the line has been hidden from view by the user
     Graph *Plot;
     Graph *Residual;
     Gtk::VBox Box;
@@ -129,11 +145,17 @@ class LineData : public XgLine, public Gtk::EventBox {
 
     Gtk::Frame DataFrame;
     
-    bool Selected;
-    bool Disabled;
     
+
     void prepareData ();
     void doConstructor ();
+
+    Gtk::Menu menuPlotEnablePopup;		// For a right click on a disabled line profile
+    Gtk::Menu menuPlotDisablePopup;		// For a right click on an enabled line profile
+
+    void on_popup_enable_line ();
+    void on_popup_disable_line ();
+    void on_popup_hide_line ();
 
 };
     

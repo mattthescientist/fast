@@ -514,7 +514,7 @@ AnalyserWindow::AnalyserWindow () {
   }
   menuInitialPopup.accelerate(*this);
   
-  // Cosntruct the treeLevels popup menu for a right click on empty space
+  // Construct the treeLevels popup menu for a right click on empty space
   {
     Gtk::Menu::MenuList& menulist = menuLevelInitPopup.items();
     menulist.push_back(Gtk::Menu_Helpers::MenuElem("Load Kurucz Line List",
@@ -522,7 +522,7 @@ AnalyserWindow::AnalyserWindow () {
   }
   menuLevelInitPopup.accelerate(*this);
   
-  // Cosntruct the treeLevels popup menu for a right click on an upper level
+  // Construct the treeLevels popup menu for a right click on an upper level
   {
     Gtk::Menu::MenuList& menulist = menuLevelPopup.items();
     menulist.push_back(Gtk::Menu_Helpers::MenuElem("Load Kurucz Line List",

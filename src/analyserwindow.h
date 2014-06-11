@@ -98,7 +98,6 @@ class AnalyserWindow : public Gtk::Window {
     // Class variables to store all loaded Kurucz and XGremlin data
     KzList KuruczList;
     vector < XgSpectrum > ExptSpectra;
-    // [level][spectrum][line]
     vector < vector < vector <LinePair> > > LevelLines;
     vector < vector <LineData *> > LineBoxes; 
     vector < Gtk::Frame *> frameSpectrumPlots;
@@ -141,7 +140,7 @@ class AnalyserWindow : public Gtk::Window {
     Gtk::TreeView treeLevelsBF;        // Contains BF data for loaded upper levels
     Gtk::TreeView treeDataKur;         // Contains the Kurucz lines for the selected upper level
     Gtk::TreeView treeDataXGr;         // Contains the XGremlin lines for the selected upper level
-    Gtk::TreeView treeDataComp;        // Contains information for the comparision of loaded experimental spectra
+    Gtk::TreeView treeDataComp;        // Contains information for the comparison of loaded experimental spectra
     Gtk::TreeView treeDataBF;          // Contains BF and log(gf) data for each line in the selected upper level
     Gtk::VBox Profiles;                // Displays plots for XGremlin lines corresponding to the selected upper level
     Gtk::Statusbar Status;
@@ -153,13 +152,13 @@ class AnalyserWindow : public Gtk::Window {
     Glib::ustring invalid_text_for_retry;
 
     // Popup context menus accessed through right-mouse clicks
-    Gtk::Menu menuSpectraPopup;
-    Gtk::Menu menuLinelistPopup;
-    Gtk::Menu menuStdLampPopup;
-    Gtk::Menu menuRadiancePopup;
-    Gtk::Menu menuInitialPopup;
-    Gtk::Menu menuLevelInitPopup;
-    Gtk::Menu menuLevelPopup;
+    Gtk::Menu menuSpectraPopup;			// For a click on a line spectrum listed in treeSpectra
+    Gtk::Menu menuLinelistPopup;		// For a click on a line list in treeSpectra
+    Gtk::Menu menuStdLampPopup;			// For a click on a standard lamp spectrum in treeSpectra
+    Gtk::Menu menuRadiancePopup;		// For a click on a standard lamp RAD file in treeSpectra
+    Gtk::Menu menuInitialPopup;			// For a click on a black area of treeSpectra
+    Gtk::Menu menuLevelInitPopup;		// For a click on a blank area of treeLevels
+    Gtk::Menu menuLevelPopup;			// For a click on a level in treeLevels
 
     // Glib pointers to treeView data
     Glib::RefPtr<Gtk::UIManager> m_refUIManager;
@@ -266,6 +265,9 @@ class AnalyserWindow : public Gtk::Window {
     void on_popup_link_spectrum ();
     void on_popup_remove_level ();
     void on_popup_export_linelist ();
+    void on_popup_enable_line ();
+    void on_popup_disable_line (bool Disable);
+    void on_popup_hide_line ();
     void ref_spectrum_toggled (const Glib::ustring& path);
     bool on_delete_event (GdkEventAny* event);
     void do_link_spectrum (GdkEventButton* event);
