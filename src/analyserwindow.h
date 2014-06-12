@@ -212,7 +212,7 @@ class AnalyserWindow : public Gtk::Window {
     void updateXGremlinList (vector < vector <LinePair *> > OrderedPairs, 
       vector <string> SpectrumLabels, vector <unsigned int> SpectrumOrder);
     vector <DataBF> calculateBranchingFractions (vector < vector <LinePair *> > OrderedPairs, 
-      vector <string> SpectrumLabels, vector <unsigned int> SpectrumOrder);
+      vector <string> SpectrumLabels, vector <unsigned int> SpectrumOrder, bool CopyPlots = true);
     void updateBranchingFractions (vector < vector <LinePair *> > OrderedPairs, 
       vector <string> SpectrumLabels, vector <unsigned int> SpectrumOrder);
     vector <RatioAndError> updateComparisonList (vector < vector <LinePair *> > 

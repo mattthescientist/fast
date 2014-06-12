@@ -636,6 +636,7 @@ void AnalyserWindow::on_data_output_results () {
   vector <XgLine> NextLevelFits;
   vector <vector <KzLine> > Targets;
   vector <KzLine> NextLevelTargets;
+  vector <unsigned int> LinesToPlot;
 
   // Find the reference spectrum. This will be plotted first.
   for (unsigned int i = 0; i < ExptSpectra.size (); i ++) {
@@ -651,12 +652,26 @@ void AnalyserWindow::on_data_output_results () {
     SpectrumLabels.clear ();
     SpectrumOrder.clear ();
     OrderedPairs.clear ();
+    LinesToPlot.clear ();
+
     
+    // Look at each line in turn and see if it is plotted in at least one spectrum.
+	// If so, add its index to LinesToPlot. This is effectively scanning through each
+	// COLUMN in the line profile plot area to make sure something is visible.
+	for (unsigned int j = 0; j < LevelLines[Level][0].size (); j ++) {
+		for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
+			if (LevelLines[Level][i][j].xgLineLineIndex != -1 && !LevelLines[Level][i][j].plot->hidden()) {
+				LinesToPlot.push_back (j);
+				break;
+			}
+		}
+	}
+
     SpectrumLabels.push_back (ExptSpectra [RefIndex].index());
     SpectrumOrder.push_back (RefIndex);
     NextPairSet.clear ();
-    for (unsigned int i = 0; i < LevelLines[Level][RefIndex].size (); i ++){
-      NextPairSet.push_back (&LevelLines[Level][RefIndex][i]);
+    for (unsigned int i = 0; i < LinesToPlot.size (); i ++){
+      NextPairSet.push_back (&LevelLines[Level][RefIndex][LinesToPlot[i]]);
     }
     OrderedPairs.push_back (NextPairSet);
 
@@ -664,8 +679,8 @@ void AnalyserWindow::on_data_output_results () {
     for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
       if (i != RefIndex) {
         NextPairSet.clear ();
-        for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
-          NextPairSet.push_back (&LevelLines[Level][i][j]);
+        for (unsigned int j = 0; j < LinesToPlot.size (); j ++) {
+          NextPairSet.push_back (&LevelLines[Level][i][LinesToPlot[j]]);
         }
         SpectrumLabels.push_back (ExptSpectra [i].index());
         SpectrumOrder.push_back (i);
@@ -676,7 +691,7 @@ void AnalyserWindow::on_data_output_results () {
     // Obtain the Branching Fraction results
     ScalingFactors = updateComparisonList (OrderedPairs, SpectrumLabels, SpectrumOrder);
     Results.push_back (calculateBranchingFractions 
-      (OrderedPairs, SpectrumLabels, SpectrumOrder));
+      (OrderedPairs, SpectrumLabels, SpectrumOrder, false));
     
     // Obtain the target lines and XGremlin fit parameters
     NextLevelFits.clear ();

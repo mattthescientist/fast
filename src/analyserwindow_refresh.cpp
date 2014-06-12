@@ -258,7 +258,7 @@ void AnalyserWindow::updateXGremlinList (
 //
 vector <DataBF> AnalyserWindow::calculateBranchingFractions (
   vector < vector <LinePair *> > OrderedPairs, vector <string> SpectrumLabels,
-  vector <unsigned int> SpectrumOrder) {
+  vector <unsigned int> SpectrumOrder, bool CopyPlots) {
   
   vector <DataBF> AllBrFracData;
   DataBF NextBrFracLine;
@@ -321,7 +321,7 @@ vector <DataBF> AnalyserWindow::calculateBranchingFractions (
             + pow (NextBrFracLine.err_trans, 2));
           NextBrFracLine.err_eqwidth = 
             NextBrFracLine.eqwidth * NextBrFracLine.err_total / 100;
-          NextBrFracLine.profile = LineBoxes[j][i];
+          if (CopyPlots) NextBrFracLine.profile = LineBoxes[j][i];
 
           // Keep a running total of the equivalent width and its error, and the
           // Kurucz branching fraction summed over all selected lines. These are
