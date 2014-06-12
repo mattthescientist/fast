@@ -118,7 +118,7 @@ void AnalyserWindow::abort_link_spectrum (GdkEventButton* event) {
 //------------------------------------------------------------------------------
 // on_popup_export_linelist () : Called when the user right clicks a line list
 // in treeSpectra and selects "Export Line List". The selected line list is
-// exported to a file specificed by the user.
+// exported to a file specified by the user.
 //
 void AnalyserWindow::on_popup_export_linelist ()
 {
@@ -306,6 +306,9 @@ void AnalyserWindow::on_popup_remove_level()
 //------------------------------------------------------------------------------
 // on_popup_disable_line () : Called when the user right clicks on a line
 // profile in the line plot area and chooses to enable or disable the line.
+// The actual act of disabling the line is done by the on_popup_disable_line ()
+// event handler in linedata.cpp.
+
 //
 void AnalyserWindow::on_popup_disable_line (bool Disable)
 {
@@ -317,10 +320,64 @@ void AnalyserWindow::on_popup_disable_line (bool Disable)
 //------------------------------------------------------------------------------
 // on_popup_delete_line () : Called when the user right clicks on any line
 // profile in the line plot area and chooses to delete the line profile.
+// The actual act of hiding the line is done by the on_popup_hide_line () event
+// handler in linedata.cpp.
 //
 void AnalyserWindow::on_popup_hide_line ()
 {
 	updatePlottedData (true);
 	updateKuruczCompleteness ();
 	projectHasChanged (true);
+}
+
+
+//------------------------------------------------------------------------------
+// on_popup_show_hidden_lines () : Called when the user right clicks on a
+// spectrum item in treeSpectra and selects "Show Hidden Lines". All previously
+// hidden lines attached to that spectrum and associated with the currently
+// selected upper level are shown.
+//
+void AnalyserWindow::on_popup_show_hidden_lines () {
+	int LevelIndex;
+	int SpectrumIndex;
+	bool FoundHiddenLines = false;
+
+	// Check the current selection is valid for both an upper level and a spectrum.
+	// Only proceed if it is.
+	Glib::RefPtr<Gtk::TreeSelection> levelSelection = treeLevelsBF.get_selection();
+	Glib::RefPtr<Gtk::TreeView::Selection> spectrumSelection = treeSpectra.get_selection();
+	if (levelSelection && spectrumSelection) {
+
+		// Get iterators for the currently selected upper level and spectrum. Only
+		// proceed if they are both valid.
+		Gtk::TreeModel::iterator iterLevel = levelSelection->get_selected();
+	    Gtk::TreeModel::iterator iterSpectrum = spectrumSelection->get_selected();
+	    if (iterLevel && iterSpectrum) {
+
+	    	// Extract the LevelLines matrix indexes for the currently selected
+	    	// upper level and spectrum.
+	    	LevelIndex = (*iterLevel)[levelCols.index];
+	    	SpectrumIndex = (*iterSpectrum)[m_Columns.index];
+
+	    	// Assuming the currently selected upper level has some lines
+	    	// associated with it, scan through all the lines belonging to the
+	    	// currently selected spectrum and show any hidden lines.
+	    	if (LevelLines[LevelIndex].size () > 0) {
+	    		for (unsigned int i = 0; i < LevelLines[LevelIndex][SpectrumIndex].size (); i ++) {
+	    			if (LevelLines[LevelIndex][SpectrumIndex][i].plot->hidden()) {
+	    				LevelLines[LevelIndex][SpectrumIndex][i].plot->hidden(false);
+	    				FoundHiddenLines = true;
+	    			}
+	    		}
+	    	}
+
+	    	// If some hidden lines were found, the project has changed. Update
+	    	// the it to take account of the newly re-activated lines.
+	    	if (FoundHiddenLines) {
+	    		projectHasChanged (true);
+	    		updateKuruczCompleteness();
+	    		updatePlottedData();
+	    	}
+	    }
+	}
 }

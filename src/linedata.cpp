@@ -228,16 +228,8 @@ void LineData::on_popup_disable_line ()
 //
 void LineData::on_popup_hide_line ()
 {
-	Gtk::MessageDialog confirm("Are you sure you wish to hide this line?",
-	  false, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_NONE);
-	confirm.add_button ("Yes", Gtk::RESPONSE_YES);
-	confirm.add_button ("No", Gtk::RESPONSE_NO);
-	confirm.set_default_response(Gtk::RESPONSE_NO);
-	int Result = confirm.run ();
-	if (Result == Gtk::RESPONSE_YES) {
-		Hidden = true;
-		Plot -> hide (true);
-		Residual -> hide (true);
-		m_signal_hidden.emit();
-	}
+	Hidden = true;
+	Plot -> hide (true);
+	Residual -> hide (true);
+	m_signal_hidden.emit();
 }

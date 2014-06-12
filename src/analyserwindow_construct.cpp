@@ -470,6 +470,8 @@ AnalyserWindow::AnalyserWindow () {
       sigc::mem_fun(*this, &AnalyserWindow::on_data_attach_standard_lamp_radiance)));
     menulist.push_back(Gtk::Menu_Helpers::MenuElem("Link to Another Spectrum",
       sigc::mem_fun(*this, &AnalyserWindow::on_popup_link_spectrum)));
+    menulist.push_back(Gtk::Menu_Helpers::MenuElem("Show Hidden Lines in Current Level",
+          sigc::mem_fun(*this, &AnalyserWindow::on_popup_show_hidden_lines)));
     menulist.push_back(Gtk::Menu_Helpers::MenuElem("Remove Spectrum",
       sigc::mem_fun(*this, &AnalyserWindow::on_data_remove_spectrum)));
   }

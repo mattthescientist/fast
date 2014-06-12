@@ -30,7 +30,7 @@
 
 // The current version of FAST is named here. This is printed on startup and in
 // the FAST help->about window.
-#define FAST_VERSION "0.6.5"
+#define FAST_VERSION "0.6.6"
 
 // Define an FTS file version. This is stored in the FTS file and can be used
 // for backward compatibility at a later date should a new file version be

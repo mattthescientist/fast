@@ -234,6 +234,7 @@ class AnalyserWindow : public Gtk::Window {
     
   protected:
     // GTK signal handlers
+    // Handlers related to the File menu. These are implemented in analyserwindow_signal_file.cpp
     void on_file_new ();
     void on_file_open ();
     void on_file_save ();
@@ -242,6 +243,8 @@ class AnalyserWindow : public Gtk::Window {
     void on_file_export_project ();
     void on_file_print_level ();
     void on_file_quit () { hide (); }
+    // Handlers related to the Data menu. Some of these functions are also called from right-click
+    // popup menus. These methods are implemented in analyserwindow_signal_data.cpp
     void on_data_load_kurucz ();
     void on_data_save_kurucz ();
     void on_data_load_expt_spectrum ();
@@ -250,28 +253,33 @@ class AnalyserWindow : public Gtk::Window {
     void on_data_attach_standard_lamp_radiance ();
     void on_data_remove_spectrum ();
     void on_data_output_results ();
-    void on_tools_options ();
-    void on_help_about ();
-    void scaleGraphs ();
+    // Handlers for click events on various widgets. These are implemented in analyserwindow_signal_click.cpp
     void on_click_treeSpectra (GdkEventButton* event);
     void on_click_level_list (GdkEventButton* event);
     void on_click_level_list_bf (GdkEventButton* event);
     void on_click_treeDataXGr ();
     void on_click_plot (bool Selected);
     void row_callback_treeDataXGr (const Gtk::TreeModel::iterator& iter);
+    // Handlers for items in right-click popup menus. These are implemented in analyserwindow_signal_popup.cpp
     void on_popup_remove_linelist ();
     void on_popup_remove_radiance ();
     void on_popup_remove_standard_lamp_spectrum ();
     void on_popup_link_spectrum ();
+    void on_popup_show_hidden_lines ();
     void on_popup_remove_level ();
     void on_popup_export_linelist ();
     void on_popup_enable_line ();
     void on_popup_disable_line (bool Disable);
     void on_popup_hide_line ();
+    // Miscellaneous signal handlers, which are implemented in analyserwindow_signal.cpp
+    void on_tools_options ();
+    void on_help_about ();
     void ref_spectrum_toggled (const Glib::ustring& path);
     bool on_delete_event (GdkEventAny* event);
     void do_link_spectrum (GdkEventButton* event);
     void abort_link_spectrum (GdkEventButton* event);
+
+    void scaleGraphs ();
 
     // Model for treeLevelsBF, which contains all the level specific information
     // for branching fraction work. The bg_colour property allows the EW columns
