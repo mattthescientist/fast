@@ -30,12 +30,13 @@
 
 // The current version of FAST is named here. This is printed on startup and in
 // the FAST help->about window.
-#define FAST_VERSION "0.6.6"
+#define FAST_VERSION "0.7.0"
 
 // Define an FTS file version. This is stored in the FTS file and can be used
 // for backward compatibility at a later date should a new file version be
 // created.
-#define FTS_FILE_VERSION 2
+#define FTS_FILE_VERSION 3
+#define FTS_FILE_VERSION_UP_TO_0_6_5   2
 
 // The number of data points contained in the synthetic Voigt profiles.
 #define NUM_VOIGT_POINTS 200

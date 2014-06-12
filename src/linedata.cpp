@@ -93,7 +93,7 @@ void LineData::doConstructor () {
 	Gtk::Menu::MenuList& menulist = menuPlotEnablePopup.items();
 	menulist.push_back(Gtk::Menu_Helpers::MenuElem("Enable Line",
 	sigc::mem_fun(*this, &LineData::on_popup_enable_line)));
-	menulist.push_back(Gtk::Menu_Helpers::MenuElem("Delete Line",
+	menulist.push_back(Gtk::Menu_Helpers::MenuElem("Hide Line",
 	sigc::mem_fun(*this, &LineData::on_popup_hide_line)));
   }
 

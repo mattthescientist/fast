@@ -386,13 +386,24 @@ void AnalyserWindow::loadKuruczList (ifstream *BinIn) {
 // saveInterface (ofstream) : Saves interface settings to the project file
 // attached to the ofstream at arg1.
 void AnalyserWindow::saveInterface (ofstream *BinOut) {
-  bool Selected, CorrectSignalToNoise;
+  bool Selected, Disabled, Hidden, CorrectSignalToNoise;
   for (unsigned int Level = 0; Level < LevelLines.size (); Level ++) {
     for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
       for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
         if (LevelLines[Level][i][j].xgLine->wavenumber () > 0.0) {
-          Selected = LevelLines[Level][i][j].plot -> selected ();
+          Hidden = LevelLines[Level][i][j].plot -> hidden ();
+          if (Hidden) {
+        	  LevelLines[Level][i][j].plot -> hidden (false);
+        	  Selected = LevelLines[Level][i][j].plot -> selected ();
+			  Disabled = LevelLines[Level][i][j].plot -> disabled ();
+			  LevelLines[Level][i][j].plot -> hidden (true);
+          } else {
+        	  Selected = LevelLines[Level][i][j].plot -> selected ();
+        	  Disabled = LevelLines[Level][i][j].plot -> disabled ();
+          }
           BinOut->write ((char*) &Selected, sizeof (bool));
+          BinOut->write ((char*) &Disabled, sizeof (bool));
+          BinOut->write ((char*) &Hidden, sizeof (bool));
         }
       }
     }
@@ -407,16 +418,37 @@ void AnalyserWindow::saveInterface (ofstream *BinOut) {
 // attached to the ifstream at arg1.
 //
 void AnalyserWindow::loadInterface (ifstream *BinIn, int FileVersion) {
-  bool Selected, CorrectSignalToNoise;
-  for (unsigned int Level = 0; Level < LevelLines.size (); Level ++) {
-    for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
-      for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
-        if (LevelLines[Level][i][j].xgLine->wavenumber () > 0.0) {
-          BinIn->read ((char*)&Selected, sizeof(bool));
-          LevelLines[Level][i][j].plot -> selected (Selected);
-        }
-      }
-    }
+  bool Selected, Disabled, Hidden, CorrectSignalToNoise;
+
+  // Up to version 0.6.5, the disabled and hidden status of a line was not
+  // saved. If this is file is from that version or earlier, do not attempt to
+  // load these items.
+  if (FileVersion <= FTS_FILE_VERSION_UP_TO_0_6_5) {
+	  for (unsigned int Level = 0; Level < LevelLines.size (); Level ++) {
+		for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
+		  for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
+			if (LevelLines[Level][i][j].xgLine->wavenumber () > 0.0) {
+			  BinIn->read ((char*)&Selected, sizeof(bool));
+			  LevelLines[Level][i][j].plot -> selected (Selected);
+			}
+		  }
+		}
+	  }
+  } else {
+	  for (unsigned int Level = 0; Level < LevelLines.size (); Level ++) {
+		for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
+		  for (unsigned int j = 0; j < LevelLines[Level][i].size (); j ++) {
+			if (LevelLines[Level][i][j].xgLine->wavenumber () > 0.0) {
+			  BinIn->read ((char*)&Selected, sizeof(bool));
+			  BinIn->read ((char*)&Disabled, sizeof(bool));
+			  BinIn->read ((char*)&Hidden, sizeof(bool));
+			  LevelLines[Level][i][j].plot -> hidden (Hidden);
+			  LevelLines[Level][i][j].plot -> disabled (Disabled);
+			  LevelLines[Level][i][j].plot -> selected (Selected);
+			}
+		  }
+		}
+	  }
   }
   // FTS_FILE_VERSION 1 did not save the CorrectSignalToNoise boolean, so only
   // attempt to load this variable if the current file version is greater than 1.
