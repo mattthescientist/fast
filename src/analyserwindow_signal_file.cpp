@@ -260,7 +260,7 @@ void AnalyserWindow::on_file_save () {
   } else {
     try {
       saveProject (CurrentFilename);
-    } catch (Error *e) {
+    } catch (Error &e) {
       // Error message already displayed. Do nothing.
     }
   }
@@ -322,7 +322,7 @@ void AnalyserWindow::on_file_save_as () {
       try {
         saveProject (Filename);
         writeConfigFile ();
-      } catch (Error *e) {
+      } catch (Error &e) {
         // Error message already displayed. Do nothing.
       }
       break;

@@ -319,7 +319,7 @@ void KzList::read (std::string ListFile) throw (Error) {
   if (LinesToRead.is_open ()) {
     try {
       read (LinesToRead);
-    } catch (Error *Err) {
+    } catch (Error &Err) {
       LinesToRead.close ();
       oss << "Error reading Kurucz list from " << ListNoDirectory;
       osssub << "Check the file is written in the correct format and is not corrupt.";
@@ -344,7 +344,7 @@ void KzList::read (std::ifstream &LinesToRead) throw (Error) {
       try {
         l.readLine (NextLine);
         Lines.push_back (l);
-      } catch (Error *Err) {
+      } catch (Error &Err) {
         Lines.clear ();
         throw Err;
       }

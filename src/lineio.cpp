@@ -174,7 +174,7 @@ vector <XgLine> readLineList (string Filename) throw (Error) {
   
   // Failed to read an XGremlin header from the file, so assume it is a FAST
   // ASCII line list.
-  } catch (Error *e) {
+  } catch (Error &e) {
     ListFile.seekg (ios::beg);
     LineCount = 0;
     while (!ListFile.eof ()) {
@@ -299,8 +299,8 @@ vector <XgLine> readLinFile (string LinFile) throw (Error) {
           NextLine.wavenumber (NextLineIn.wavenumber);
           NextLine.peak (NextLineIn.peak);
           NextLine.width (NextLineIn.width);
-        } catch (Error *Err) {
-          readLinFileError (*Err, i + 1);
+        } catch (Error &Err) {
+          readLinFileError (Err, i + 1);
         }
         NextLine.dmp ((NextLineIn.dmp - 1.0) / 25.0);
         NextLine.tags (NextLineIn.tags);
@@ -323,8 +323,8 @@ vector <XgLine> readLinFile (string LinFile) throw (Error) {
             NextLine.eqwidth (V.P(DmpInt) + DmpFraction*(V.P(DmpInt+1)-V.P(DmpInt)));
           }
           NextLine.eqwidth(NextLine.eqwidth() * NextLine.width() * NextLine.peak());
-        } catch (Error *Err) {
-          readLinFileError (*Err, i + 1);
+        } catch (Error &Err) {
+          readLinFileError (Err, i + 1);
         }
         RtnLines.push_back (NextLine);
       }

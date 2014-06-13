@@ -44,6 +44,7 @@ void LineData::doConstructor () {
   Selected = false;
   Disabled = false;
   Hidden = false;
+  Changed = false;
   Ready = false;
   ShowData = false;
   Plot = new Graph;
@@ -153,6 +154,7 @@ bool LineData::on_button_press_event(GdkEventButton* event) {
 				Selected = !Selected;
 				Plot -> select (Selected);
 				Residual -> select (Selected);
+				Changed = true;
 				m_signal_selected.emit(Selected);
 			}
 			else if (event->button == 3) {

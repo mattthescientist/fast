@@ -264,14 +264,14 @@ void XgSpectrum::radiance (string RadIn) throw (Error) {
         try {
           radiance_errors (RadFile);
           ErrorsLoaded = true;
-        } catch (Error *Err) {
-          if (Err->code == FLT_FILE_READ_ERROR) {
+        } catch (Error &Err) {
+          if (Err.code == FLT_FILE_READ_ERROR) {
             Radiance.clear ();
             RadianceErrors.clear ();
             oss << "Error reading radiance errors from " << RadFileNoDirectory;
             osssub << "Check the file is written in the correct RAD format and is not corrupt.";
             throw Error (FLT_FILE_READ_ERROR, oss.str (), osssub.str ());
-          } else if (Err->code == XGSPEC_NO_RAD_UNCERTAINTIES) {
+          } else if (Err.code == XGSPEC_NO_RAD_UNCERTAINTIES) {
             ErrorsLoaded = false;
           }
         }

@@ -52,6 +52,8 @@ OutputWindow::OutputWindow () :
   ButtonBFs.set_active (true);
   ButtonTargets.set_label ("Target Lines");
   ButtonProfiles.set_label ("Fit Profiles");
+  ButtonMoveUp.set_sensitive(false);
+  ButtonMoveDown.set_sensitive(false);
   LeftBox.pack_start (ComboOutputType, false, false, 2);
   for (unsigned int i = 0; i < NUM_OUTPUTWINDOW_TYPES; i ++) {
     ComboOutputType.append_text (OUTPUTWINDOW_TYPES [i]);
@@ -104,6 +106,8 @@ OutputWindow::OutputWindow () :
   BoxSaveCancel.pack_end (ButtonCancel, false, false, 2);
   ButtonSave.set_size_request (75);
   ButtonCancel.set_size_request (75);
+  ButtonSave.set_can_default(true);
+  ButtonSave.grab_default();
   
   modelFieldsAvailable = Gtk::ListStore::create (fieldsCols);
   modelFieldsSelected = Gtk::ListStore::create (fieldsCols);
@@ -467,6 +471,14 @@ void OutputWindow::display_fields () {
     row[fieldsCols.ResultIndex] = SelectedFields[Field]->ResultIndex;
     row[fieldsCols.ListIndex] = Field;
   }
+  if (SelectedFields.size() > 1) {
+	  ButtonMoveUp.set_sensitive(true);
+	  ButtonMoveDown.set_sensitive(true);
+  } else {
+	  ButtonMoveUp.set_sensitive(false);
+	  ButtonMoveDown.set_sensitive(false);
+  }
+  ButtonSave.grab_focus();
 }
 
 //------------------------------------------------------------------------------
@@ -606,6 +618,7 @@ void OutputWindow::on_button_move_up () {
         }
       }
     }
+    ButtonSave.grab_focus();
   }
 }
 
@@ -663,6 +676,7 @@ void OutputWindow::on_button_move_down () {
         }
       }
     }
+    ButtonSave.grab_focus();
   }
 }
 
@@ -699,24 +713,34 @@ void OutputWindow::on_button_browse () {
   if (result == Gtk::RESPONSE_OK) {
     Filename = dialog.get_filename();
     EntryFileSelection.set_text (Filename);
+    ButtonSave.grab_focus();
   }
 }
 
 
+//------------------------------------------------------------------------------
+// on_button_delimit_other () :
+//
 void OutputWindow::on_button_delimit_other () {
   if (ButtonDelimitOther.get_active ()) {
     EntryDelimitOther.set_sensitive (true);
   } else {
     EntryDelimitOther.set_sensitive (false);
   }
+  ButtonSave.grab_focus();
 }
 
+
+//------------------------------------------------------------------------------
+// on_change_combo_output () :
+//
 void OutputWindow::on_change_combo_output () {
   if (ComboOutputType.get_active_row_number () == 0) {
     FrameListDelimiters.show ();
   } else {
     FrameListDelimiters.hide ();
   }
+  ButtonSave.grab_focus();
 }
 
 //------------------------------------------------------------------------------
@@ -728,7 +752,7 @@ void OutputWindow::on_button_save () {
   try {
     if (SelectedFields.size () == 0)
       throw (Error (FLT_SYNTAX_ERROR, "Please specify some fields to output", "The list of 'Selected Fields' is currently empty"));
-    if (Filename == "") 
+    if (Filename == "")
       throw (Error (FLT_SYNTAX_ERROR, "Please specify an output file name", "The 'Output file name' box is currently empty"));
     switch (FileType) {
       case 0: writeCSV (Filename); break;
@@ -740,10 +764,10 @@ void OutputWindow::on_button_save () {
           "Use the drop down box on the left of the window"));
     }
     hide ();
-  } catch (Error *Err) {
-    if (Err->code != FLT_SAVE_ABORTED) {
-      Gtk::MessageDialog dialog(*this, Err->message, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
-      dialog.set_secondary_text(Err->subtext);
+  } catch (Error &Err) {
+    if (Err.code != FLT_SAVE_ABORTED) {
+      Gtk::MessageDialog dialog(*this, Err.message, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+      dialog.set_secondary_text(Err.subtext);
       dialog.run();
     }
   }

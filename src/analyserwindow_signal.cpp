@@ -98,7 +98,7 @@ void AnalyserWindow::newProject () {
         } else {
           saveProject (CurrentFilename);
         }
-      } catch (Error *e) {
+      } catch (Error &e) {
         // Do nothing else here
         return;
       }

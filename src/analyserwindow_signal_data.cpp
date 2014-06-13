@@ -81,7 +81,7 @@ void AnalyserWindow::on_data_load_kurucz () {
         oss << "Successfully loaded " << dialog.get_filename().substr(FilePos) << ".";
         Status.push (oss.str());
         projectHasChanged (true);
-      } catch (Error *Err) {
+      } catch (Error &Err) {
         display_error (Err);
         return;
       }
@@ -125,7 +125,7 @@ void AnalyserWindow::on_data_save_kurucz () {
     { 
       try {
         KuruczList.save (dialog.get_filename());
-      } catch (Error *Err) {
+      } catch (Error &Err) {
         display_error (Err);
         return;
       }
@@ -194,7 +194,7 @@ int AnalyserWindow::do_load_expt_spectrum () {
         XgSpectrum NewSpectrum;
         try {
           NewSpectrum.loadDat (dialog.get_filename());
-        } catch (Error e) {
+        } catch (Error &e) {
           if (e.code == FLT_FILE_HEAD_ERROR) {
             NewSpectrum.loadAscii (dialog.get_filename());
           } else {
@@ -234,7 +234,7 @@ int AnalyserWindow::do_load_expt_spectrum () {
         
       // If a file reading error occurs, inform the user. If another error has
       // occurred, continue to throw it.
-      } catch (Error *Err) {
+      } catch (Error &Err) {
         display_error (Err);
         return FLT_DIALOG_CANCEL;
       }          
@@ -351,7 +351,7 @@ void AnalyserWindow::on_data_load_line_list () {
             Status.push (oss.str());
             projectHasChanged (true);
 
-          } catch (Error *Err) {
+          } catch (Error &Err) {
             display_error (Err);
             return;
           }
@@ -428,12 +428,12 @@ void AnalyserWindow::on_data_attach_standard_lamp_radiance () {
           // Attach the radiance file to the currently selected spectrum.
           try {
             ExptSpectra[SelectedRow[m_Columns.index]].radiance (dialog.get_filename());
-          } catch (Error *Err) {
-            if (Err->code == XGSPEC_NO_RAD_UNCERTAINTIES) {
+          } catch (Error &Err) {
+            if (Err.code == XGSPEC_NO_RAD_UNCERTAINTIES) {
               // Warn the user that no radiance uncertainties were found
-              Gtk::MessageDialog Warning(*this, Err->message,
+              Gtk::MessageDialog Warning(*this, Err.message,
                 false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK);
-              Warning.set_secondary_text(Err->subtext);
+              Warning.set_secondary_text(Err.subtext);
               Warning.run();
             } else {
               // A more serious error occurred, so abort
@@ -560,7 +560,7 @@ void AnalyserWindow::on_data_attach_standard_lamp_spectrum () {
             updateKuruczCompleteness ();
             updatePlottedData ();
             
-          } catch (Error *Err) {
+          } catch (Error &Err) {
             display_error (Err);
             return;
           }

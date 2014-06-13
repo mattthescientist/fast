@@ -23,9 +23,9 @@
 // on_data_load_line_list_error (Error) : Handles errors encountered when 
 // reading lines from an XGremlin LIN file in on_data_load_line_list ()
 //
-void AnalyserWindow::display_error (Error *Err, string StatusMsg) {
-  Gtk::MessageDialog dialog(*this, Err->message, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
-  dialog.set_secondary_text(Err->subtext);
+void AnalyserWindow::display_error (Error Err, string StatusMsg) {
+  Gtk::MessageDialog dialog(*this, Err.message, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK);
+  dialog.set_secondary_text(Err.subtext);
   dialog.run();
   Status.push (StatusMsg);
 }

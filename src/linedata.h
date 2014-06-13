@@ -94,9 +94,11 @@ class LineData : public XgLine, public Gtk::EventBox {
     bool selected () { if (Hidden) return false; else return Selected; }
     bool disabled () { if (Hidden) return true; else return Disabled; }
     bool hidden () { return Hidden; }
+    bool changed () { return Changed; }
     void selected (bool a) { Selected = a; Plot->select(a); Residual->select(a); }
     void disabled (bool a) { Selected = false; Disabled=a; Plot->disable(a); Residual->disable(a); }
     void hidden (bool a) { Hidden = a; Plot->hide(a); Residual->hide(a); }
+    void clearChanged () { Changed = false; }
     bool autoLimits () { return Plot -> autoLimits (); }
     void setAutoLimits () { Plot -> setAutoLimits (); }
     vector <Coord> getPlotData (int i) { return Plot -> getPlotData (i); }
@@ -136,6 +138,7 @@ class LineData : public XgLine, public Gtk::EventBox {
     bool Selected;		// True if the line has been selected by the user
     bool Disabled;		// True if the line has been disabled by the user
     bool Hidden;		// True if the line has been hidden from view by the user
+    bool Changed;		// Set to true when Selected is changed. This allows upstream code to identify a recently changed plot
     Graph *Plot;
     Graph *Residual;
     Gtk::VBox Box;

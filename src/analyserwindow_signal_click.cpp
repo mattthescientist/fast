@@ -167,7 +167,7 @@ void AnalyserWindow::on_click_level_list (GdkEventButton* event) {
 //------------------------------------------------------------------------------
 // on_click_level_list_bf () : When a Kurucz upper level is selected in 
 // treeLevels, this function is called to begin the process of updating the 
-// displayed line plots. If the right moust button was pressed, a popup context
+// displayed line plots. If the right mouse button was pressed, a popup context
 // menu is shown with options to manage the Kurucz data.
 //
 void AnalyserWindow::on_click_level_list_bf (GdkEventButton* event) {
@@ -188,7 +188,7 @@ void AnalyserWindow::on_click_level_list_bf (GdkEventButton* event) {
           treeLevelsBF.set_cursor(path);
         }
       } else {
-        // If no item could be selected AND the right moust button was pressed,
+        // If no item could be selected AND the right mouse button was pressed,
         // show the initial Kurucz context menu.
         if (event->button == 3) {
           menuLevelInitPopup.popup(event->button, event->time);
@@ -218,9 +218,40 @@ void AnalyserWindow::on_click_level_list_bf (GdkEventButton* event) {
 // selected or unselected.
 //
 void AnalyserWindow::on_click_plot (bool Selected) {
-  updatePlottedData (false);
-  updateKuruczCompleteness ();
-  projectHasChanged (true);
+
+	// Get the index of the currently selected upper level
+	Glib::RefPtr<Gtk::TreeSelection> treeSelection = treeLevelsBF.get_selection();
+    if (treeSelection) {
+	  Gtk::TreeModel::iterator iter = treeLevelsBF.get_selection()->get_selected();
+	  if (iter) {
+	    int Level = (*iter)[levelCols.index];
+	    bool FoundLine = false;
+
+		// Look at each line in turn to identify the plot that the user clicked on.
+	    // Check to make sure that this line is only selected in that spectrum.
+	    // De-select the line in all other spectra.
+		for (unsigned int j = 0; j < LevelLines[Level][0].size (); j ++) {
+			for (unsigned int i = 0; i < LevelLines[Level].size (); i ++) {
+				if (LevelLines[Level][i][j].plot->changed()) {
+					LevelLines[Level][i][j].plot->clearChanged();
+					for (unsigned int k = 0; k < LevelLines[Level].size (); k ++) {
+						if (LevelLines[Level][k][j].plot->selected() && k != i) {
+							LevelLines[Level][k][j].plot->selected(false);
+						}
+					}
+					FoundLine = true;
+					break;
+				}
+			}
+			if (FoundLine) break;
+		}
+	  }
+    }
+
+    // Now update the plotted data and branching fraction information
+    updatePlottedData (false);
+    updateKuruczCompleteness ();
+    projectHasChanged (true);
 }
 
 
