@@ -46,7 +46,7 @@ AnalyserWindow::AnalyserWindow () {
   // Build the menubar and toolbar and add them to the top of the BaseBox
   buildMenubarAndToolbar ();
   
-  // Prepare the central potion of the AnalyserWindow
+  // Prepare the central portion of the AnalyserWindow
   frameSpectra.set_label ("Experimental Spectra");
   frameLevels.set_label ("Target Upper Levels");
   frameSpectra.add (scrollSpectra);
@@ -230,7 +230,7 @@ AnalyserWindow::AnalyserWindow () {
   pColumn->add_attribute(pRenderer->property_background_gdk(), colsDataXGr.bg_colour);
   
   pRenderer = Gtk::manage(new Gtk::CellRendererText());
-  Col = treeDataXGr.append_column ("Wavenumber", *pRenderer);
+  Col = treeDataXGr.append_column ("Wavenumber / cm-1", *pRenderer);
   pColumn = treeDataXGr.get_column(Col - 1);
   pColumn->add_attribute(pRenderer->property_text(), colsDataXGr.wavenumber);
   pColumn->add_attribute(pRenderer->property_background_gdk(), colsDataXGr.bg_colour);
@@ -355,7 +355,7 @@ AnalyserWindow::AnalyserWindow () {
   pColumn->add_attribute(pRenderer->property_background_gdk(), colsDataBF.bg_colour);
   
   pRenderer = Gtk::manage(new Gtk::CellRendererText());
-  Col = treeDataBF.append_column ("A", *pRenderer);
+  Col = treeDataBF.append_column ("A / s-1", *pRenderer);
   pColumn = treeDataBF.get_column(Col - 1);
   pColumn->add_attribute(pRenderer->property_text(), colsDataBF.a);
   pColumn->add_attribute(pRenderer->property_background_gdk(), colsDataBF.bg_colour);  
@@ -390,7 +390,7 @@ AnalyserWindow::AnalyserWindow () {
   // state of the each line.
   treeDataKur.set_model (lineDataTreeModel);
   pRenderer = Gtk::manage(new Gtk::CellRendererText());
-  Col = treeDataKur.append_column("Wavenumber / K", *pRenderer);
+  Col = treeDataKur.append_column("Wavenumber / cm-1", *pRenderer);
   pColumn = treeDataKur.get_column(Col - 1);
   pColumn->add_attribute(pRenderer->property_text(), targetsCols.sigma);
   pColumn->add_attribute(pRenderer->property_background_gdk(), targetsCols.bg_colour);
@@ -418,7 +418,7 @@ AnalyserWindow::AnalyserWindow () {
   pColumn->add_attribute(pRenderer->property_foreground_gdk(), targetsCols.colour);
 
   pRenderer = Gtk::manage(new Gtk::CellRendererText());
-  Col = treeDataKur.append_column("E lower / K", *pRenderer);
+  Col = treeDataKur.append_column("E lower / cm-1", *pRenderer);
   pColumn = treeDataKur.get_column(Col - 1);
   pColumn->add_attribute(pRenderer->property_text(), targetsCols.elower);
   pColumn->add_attribute(pRenderer->property_background_gdk(), targetsCols.bg_colour);
@@ -439,7 +439,7 @@ AnalyserWindow::AnalyserWindow () {
   pColumn->add_attribute(pRenderer->property_foreground_gdk(), targetsCols.colour);
 
   pRenderer = Gtk::manage(new Gtk::CellRendererText());
-  Col = treeDataKur.append_column("E upper / K", *pRenderer);
+  Col = treeDataKur.append_column("E upper / cm-1", *pRenderer);
   pColumn = treeDataKur.get_column(Col - 1);
   pColumn->add_attribute(pRenderer->property_text(), targetsCols.eupper);
   pColumn->add_attribute(pRenderer->property_background_gdk(), targetsCols.bg_colour);

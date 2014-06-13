@@ -48,9 +48,9 @@ using namespace::std;
 #define TIC_SPACING      0.25
 #define LABEL_SPACING    0.5
 #define DEF_PLOT_WIDTH   1
-#define TIC_LENGTH       (4 * ZOOM_FACTOR)  /* pixels */
+#define TIC_LENGTH       (6 * ZOOM_FACTOR)  /* pixels */
 #define BORDER_WIDTH     (2 * ZOOM_FACTOR)  /* pixels */
-#define X_AXIS_HEIGHT    (20 * ZOOM_FACTOR) /* pixels */
+#define X_AXIS_HEIGHT    (25 * ZOOM_FACTOR) /* pixels */
 #define Y_AXIS_WIDTH     (40 * ZOOM_FACTOR) /* pixels */
 #define GRAPH_PAD_RIGHT  (5 * ZOOM_FACTOR)  /* pixels */
 #define GRAPH_PAD_TOP    (10 * ZOOM_FACTOR) /* pixels */

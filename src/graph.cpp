@@ -126,8 +126,12 @@ void Graph::drawXTicMarks (Cairo::RefPtr<Cairo::Context> cr,
   vector <string> Labels;
   int Order;
   double PlotXRange, XGraphPos, XGraphOffset, XPixelOffset;
+  double XCentrePos;
   ostringstream oss;
+  int TxtWidth = 0;	  		// The width, in pixels, of the current axis label
+  int TxtHeight = 0;		// The height, in pixels, of the current axis label
   
+
   PlotXRange = GraphMax.x - GraphMin.x;
   if (log10 (PlotXRange) >= 0.0) {
     Order = int(log10 (PlotXRange));      // Round DOWN to the nearest int
@@ -135,7 +139,9 @@ void Graph::drawXTicMarks (Cairo::RefPtr<Cairo::Context> cr,
     Order = int(log10 (PlotXRange) - 1);  // Round UP to the nearest int
   }
 
+  // Add a tic mark at the centre of the graph
   XGraphPos = int (Plots[0][Plots[0].size () * 0.5].x / pow (10.0, Order) + 0.5) * pow (10.0, Order);
+  XCentrePos = XGraphPos;
   XGraphOffset = XGraphPos - GraphMin.x;
   XPixelOffset = XGraphOffset / (GraphMax.x - GraphMin.x) * (width - TOTAL_X_PAD);
   if (XPixelOffset < width - GRAPH_PAD_RIGHT) {
@@ -144,6 +150,7 @@ void Graph::drawXTicMarks (Cairo::RefPtr<Cairo::Context> cr,
     Labels.push_back (oss.str());
   }  
   
+  // Add a tic mark to the left of the centre
   XGraphPos = int (Plots[0][Plots[0].size () * 0.2].x / pow (10.0, Order) + 0.5) * pow (10.0, Order);
   XGraphOffset = XGraphPos - GraphMin.x;
   XPixelOffset = XGraphOffset / (GraphMax.x - GraphMin.x) * (width - TOTAL_X_PAD);
@@ -151,7 +158,10 @@ void Graph::drawXTicMarks (Cairo::RefPtr<Cairo::Context> cr,
     oss.str (""); oss << XGraphPos;
     Labels.push_back (oss.str());
  
-  XGraphPos = int (Plots[0][Plots[0].size () * 0.8].x / pow (10.0, Order) + 0.5) * pow (10.0, Order);
+  // Add a tic mark to the right of centre with the same spacing as the one to
+  // the left of centre
+  //XGraphPos = int (Plots[0][Plots[0].size () * 0.8].x / pow (10.0, Order) + 0.5) * pow (10.0, Order);
+  XGraphPos = 2.0 * XCentrePos - XGraphPos;
   XGraphOffset = XGraphPos - GraphMin.x;
   XPixelOffset = XGraphOffset / (GraphMax.x - GraphMin.x) * (width - TOTAL_X_PAD);
   if (XPixelOffset < width - TOTAL_X_PAD) {
@@ -164,6 +174,8 @@ void Graph::drawXTicMarks (Cairo::RefPtr<Cairo::Context> cr,
   for (unsigned int i = 0; i < XTics.size (); i ++) {
     cr -> move_to (GRAPH_PAD_LEFT + XTics[i], height - GRAPH_PAD_BOTTOM - TIC_LENGTH);
     cr -> line_to (GRAPH_PAD_LEFT + XTics[i], height - GRAPH_PAD_BOTTOM);
+    cr -> move_to (GRAPH_PAD_LEFT + XTics[i], GRAPH_PAD_TOP);
+    cr -> line_to (GRAPH_PAD_LEFT + XTics[i], GRAPH_PAD_TOP + TIC_LENGTH);
   }
   cr -> stroke ();
 
@@ -172,14 +184,23 @@ void Graph::drawXTicMarks (Cairo::RefPtr<Cairo::Context> cr,
   Glib::RefPtr<Pango::Layout> layout = Pango::Layout::create (lc);
   oss.str (""); oss << "normal " << FONT_SIZE;
   layout -> set_font_description(Pango::FontDescription (oss.str().c_str()));
-  int TxtWidth, TxtHeight;
 
-  for (unsigned int i = 0; i < Labels.size (); i ++) {
-    layout -> set_text (Labels [i]);
-    layout -> get_pixel_size (TxtWidth, TxtHeight);
-    get_window () ->draw_layout(get_style()->get_text_gc(Gtk::STATE_NORMAL), 
-      GRAPH_PAD_LEFT + XTics[i] - TxtWidth / 2.0, 
-      height - GRAPH_PAD_BOTTOM, layout);
+  // Add the first label to the x axis
+  layout -> set_text (Labels [0]);
+  layout -> get_pixel_size (TxtWidth, TxtHeight);
+  get_window () ->draw_layout(get_style()->get_text_gc(Gtk::STATE_NORMAL),
+	GRAPH_PAD_LEFT + XTics[0] - TxtWidth / 2.0,
+	height - GRAPH_PAD_BOTTOM, layout);
+
+  // Add the remaining labels to the x axis, making sure that each one doesn't
+  // overlap the label to its left. If it does, print the label with a y offset
+  // to ensure that all the labels are legible.
+  for (unsigned int i = 1; i < Labels.size (); i ++) {
+      layout -> set_text (Labels [i]);
+      layout -> get_pixel_size (TxtWidth, TxtHeight);
+      get_window () ->draw_layout(get_style()->get_text_gc(Gtk::STATE_NORMAL),
+        GRAPH_PAD_LEFT + XTics[i] - TxtWidth / 2.0,
+        height - GRAPH_PAD_BOTTOM + TxtHeight, layout);
   }
 }
 
@@ -198,7 +219,7 @@ void Graph::drawYTicMarks (Cairo::RefPtr<Cairo::Context> cr,
   double PlotYRange = GraphMax.y - GraphMin.y;
   double YTicSpacing = pow (10.0, int(log10 (PlotYRange)));
   
-  // Now adjust the tic spacing by factors of 2 to ensure tic marks are neither
+  // Adjust the tic spacing by factors of 2 to ensure tic marks are neither
   // too closely nor too sparsely packed
   while (YTicSpacing / PlotYRange * (height - TOTAL_Y_PAD) < MIN_Y_TIC_SPACING) {
     YTicSpacing *= 2.0;
@@ -207,7 +228,7 @@ void Graph::drawYTicMarks (Cairo::RefPtr<Cairo::Context> cr,
     YTicSpacing /= 2.0;
   }
   
-  // Now the spacing has been established, create the first mark at y = 0
+  // The spacing has been established. Create the first mark at y = 0
   double YZeroPosition = (0.0 - GraphMin.y) / PlotYRange;
   YTics.push_back (height - GRAPH_PAD_BOTTOM - (height - TOTAL_Y_PAD) * YZeroPosition);
   
