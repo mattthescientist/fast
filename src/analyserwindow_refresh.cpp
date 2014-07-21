@@ -408,7 +408,7 @@ vector <DataBF> AnalyserWindow::calculateBranchingFractions (
     gf = AllBrFracData[j].loggf;
     AllBrFracData[j].a = AllBrFracData[j].br_frac * AllBrFracData[j].a;
     AllBrFracData[j].err_a = 
-      sqrt (pow (AllBrFracData[j].err_br_frac, 2) + pow (AllBrFracData[j].err_a, 2));
+      sqrt (pow (AllBrFracData[j].err_br_frac, 2) + AllBrFracData[j].err_a);
     AllBrFracData[j].loggf = log10 (gf * AllBrFracData[j].a);
     AllBrFracData[j].dex = log10 (gf * (1 + AllBrFracData[j].err_a / 100))
       - log10 (gf);
