@@ -1,0 +1,26 @@
+Source: fast-0.7.0-0ubuntu1
+Section: science
+Priority: extra
+Maintainer: matt <m.ruffoni@imperial.ac.uk>
+Build-Depends: debhelper (>=9), libatk1.0-dev, libpangomm-1.4-dev, libgtkmm-2.4-dev,
+  x11proto-damage-dev, libgdk-pixbuf2.0-dev, libglib2.0-dev, libgtk2.0-dev, libharfbuzz-dev,
+  libatkmm-1.6-dev, libglibmm-2.4-dev, x11proto-render-dev, libcairo2-dev, libcairomm-1.0-dev,
+  libsigc++-2.0-dev, libfreetype6-dev, libpango1.0-dev, x11proto-composite-dev, x11proto-randr-dev,
+  libpthread-stubs0-dev, libxcomposite-dev, libpng12-dev, libpixman-1-dev, x11proto-kb-dev,
+  libxau-dev, libxdmcp-dev, libxi-dev, x11proto-xinerama-dev, libfontconfig1-dev, libgsl0-dev
+Standards-Version: 3.9.5
+Homepage: http://www.sp.ph.ic.ac.uk/~mruffoni/fast
+Vcs-Git: https://github.com/mattthescientist/fast.git
+Vcs-Browser: https://github.com/mattthescientist/fast
+
+Package: fast
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: FTS Atomic Spectrum Tool (FAST)
+ The FTS Atomic Spectrum Tool (FAST) simplifies the analysis atomic line spectra
+ obtained from Fourier transform spectrometers. Multiple line profiles from 
+ numerous spectra may be displayed side-by-side for easy cross-comparison, and
+ theoretical line parameters loaded alongside experimental data to help in 
+ assessing the reliability of results. A key feature is the ability to calculate
+ of atomic branching fractions and oscillator strengths, which is not provided 
+ by existing analysis packages.

@@ -27,10 +27,14 @@
 
 using namespace::std;
 
-#define NUM_CMD_LINE_ARGS 2
+#define NUM_CMD_LINE_ARGS     2
 #define ERROR_INVALID_ARGS    1
 #define NO_ERROR              0
 
+
+//-----------------------------------------------------------------------------
+// showHelp () : displays the FAST syntax help on the standard output
+//
 void showHelp () {
 	cout << "fast : The FTS Atomic Spectrum Tool, for analysis of atomic line spectra" << endl;
 	cout << "------------------------------------------------------------------------" << endl;

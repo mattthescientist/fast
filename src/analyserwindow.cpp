@@ -37,6 +37,15 @@
 
 using namespace::std;
 
+
+//------------------------------------------------------------------------------
+// projectHasChanged (bool) : This method is called with 'true' at arg1 whenever
+// the user makes a change to the project. This causes the save buttons to be
+// activated. When the project is saved, this method is called with 'false' at
+// arg1 to disable the save buttons. The ProjectChangedSinceSave bool is also
+// changed in a similar way to allow for the save state to be checked when the
+// user quits FAST.
+//
 void AnalyserWindow::projectHasChanged (bool ProjectHasChanged) {
   if (ProjectHasChanged) {
     ProjectChangedSinceSave = true;

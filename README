@@ -15,7 +15,7 @@ of FAST is the ability to determine atomic branching fractions, transition
 probabilities, and oscillator strengths, which is not provided by existing
 analysis packages.
 
-For instrunctions on compiling and installing FAST, please see the FAST manual, 
+For instructions on compiling and installing FAST, please see the FAST manual, 
 which is included in this archive (docs/fast.pdf).
 
 FAST is released under the GNU General Public License version 3. Please read 

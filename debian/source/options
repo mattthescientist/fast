@@ -1,0 +1,5 @@
+tar-ignore = ".*"
+tar-ignore = "config.log"
+tar-ignore = "config.status"
+tar-ignore = "fast"
+tar-ignore = "Makefile"

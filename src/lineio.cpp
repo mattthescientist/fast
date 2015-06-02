@@ -150,7 +150,7 @@ vector <XgLine> readLineList (string Filename) throw (Error) {
     throw Error (FLT_FILE_OPEN_ERROR, oss.str (), osssub.str ());
   }
   
-  // Extract the data from the ASCII line list. First asssume that the input is
+  // Extract the data from the ASCII line list. First assume that the input is
   // an XGremlin writelines file and search for the header information.
   try {
     getline (ListFile, writelines_header::WaveCorr); // wavenumber correction
