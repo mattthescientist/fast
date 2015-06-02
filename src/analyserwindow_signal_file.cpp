@@ -394,10 +394,11 @@ void AnalyserWindow::on_file_export_project () {
 
       // Check whether or not an exported project already exists in this 
       // location. If it does, ask the user if they want to overwrite it.
-#if defined (__linux__)
-      int MkStatus = mkdir (Filename.c_str(), 0775);
-#elif defined (_WIN32)
-      int MkStatus = _mkdir (Filename.c_str());
+      int MkStatus = 0;
+#if defined (_WIN32) || defined (__WIN32__) || defined (WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+      MkStatus = _mkdir (Filename.c_str());
+#else
+      MkStatus = mkdir (Filename.c_str(), 0775);
 #endif
       if (MkStatus == -1 && errno == EEXIST) {
         size_t FilePos = dialog.get_filename().find_last_of ("/\\") + 1;
