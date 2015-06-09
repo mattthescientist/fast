@@ -95,11 +95,11 @@ void KzLine::readLine (string LineInfoIn) throw (Error) {
   string LineInfo = LineInfoIn;
 
   // First, check that LineInfoIn is of the correct length
-  if (LineInfoIn.size () != KZ_RECORD_LENGTH) {
+  if (LineInfoIn.size () != KZ_RECORD_LENGTH_LINUX && LineInfoIn.size () != KZ_RECORD_LENGTH_WIN) {
     throw Error (FLT_FILE_READ_ERROR);
   }
 
-  // First, explictly read the character fields
+  // First, explicitly read the character fields
   try {
     ConfigLower = LineInfo.substr (42, 10);
     ConfigUpper = LineInfo.substr (70, 10);

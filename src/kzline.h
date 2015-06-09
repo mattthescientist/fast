@@ -41,7 +41,8 @@
 
 // Each record of an atomic line in the Kurucz database is of a fixed length.
 // Note this length here so it can be used for error checking in readLine ().
-#define KZ_RECORD_LENGTH 160 /* characters */
+#define KZ_RECORD_LENGTH_LINUX 160 /* characters ending with CR */
+#define KZ_RECORD_LENGTH_WIN 161  /* characters ending with CR/LF */
 
 using namespace::std;
 
